@@ -1,0 +1,3 @@
+"pgbcr_user" "mysecretpassword"
+"webapp_user" "mysecretpassword"
+"postgres" "mysecretpassword"

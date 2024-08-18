@@ -1,0 +1,28 @@
+%syntax-version=1.0.0
+%project=dvdrental
+%uri=https://github.com/SirSplat/dvdrental.git
+
+
+appschema 2024-08-13T12:33:59Z dbo <dbo@dvdrental.com> # Create DVD Rental application schema.
+
+roles/pgrst_anon [appschema] 2024-08-15T15:30:32Z dbo <dbo@dvdrental.com> # Create PostgREST anonymous user, serves anonymous web requests. PostgREST will switch to this role in the database to run queries.
+roles/pgrst_anon-appschema-usage [appschema roles/pgrst_anon] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
+roles/pgrst_anon-appschema-default-privileges [appschema roles/pgrst_anon roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
+
+roles/pgrst_authenticator [appschema] 2024-08-15T15:50:47Z dbo <dbo@dvdrental.com> # Create the default role that PostgREST will connect to the application database.
+#roles/pgrst_authenticator-appschema-usage [appschema roles/pgrst_authenticator] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
+#roles/pgrst_authenticator-appschema-default-privileges [appschema roles/pgrst_authenticator roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
+roles/pgrst_authenticator-member-of-pgrst_anon [roles/pgrst_anon roles/pgrst_authenticator] 2024-08-15T16:10:17Z dbo <dbo@dvdrental.com> # Make pgrst_authenticator a member of pgrst_anon, lets pgrst_authenticator assume pgrst_anon role.
+
+roles/webapp_user [appschema] 2024-08-15T15:50:47Z dbo <dbo@dvdrental.com> # Create the default role that PostgREST will connect to the application database.
+roles/webapp_user-appschema-usage [appschema roles/webapp_user] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
+roles/webapp_user-appschema-default-privileges [appschema roles/webapp_user roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
+roles/webapp_user-member-of-pgrst_authenticator [roles/webapp_user roles/pgrst_authenticator] 2024-08-15T16:10:17Z dbo <dbo@dvdrental.com> # Make webapp_user a member of pgrst_authenticator, lets pgrst_authenticator assume webapp_user role.
+
+tables/audit_columns [appschema] 2024-08-13T15:36:38Z dbo <dbo@dvdrental.com> # Create a table containing business standardised auti columns. To be included in every table!
+tables/json_imports [appschema] 2024-08-13T15:55:27Z dbo <dbo@dvdrental.com> # Create a single column of json type for country, language etc... imports.
+tables/country [appschema] 2024-08-13T16:01:37Z dbo <dbo@dvdrental.com> # Create rental.country table.
+tables/city [appschema tables/country] 2024-08-14T09:08:51Z dbo <dbo@dvdrental.com> # Create the city table.
+tables/address [appschema tables/city] 2024-08-14T09:50:01Z dbo <dbo@dvdrental.com> # Add an address table.
+
+
