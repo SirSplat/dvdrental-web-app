@@ -11,8 +11,9 @@ services:
       FLASK_APP: ${FLASK_APP}
       FLASK_ENV: ${FLASK_ENV}
       FLASK_DEBUG: ${FLASK_DEBUG}
-      DATABASE_URL: ${WEBAPP_DB_URI}
-    command: flask run --host=0.0.0.0 --reload --extra-files=/templates
+      DATABASE_URL: ${PGSQL_DB_URI}
+      FLASK_SECRET_KEY: ${JWT_SECRET}
+    command: flask run --host=${FRONTEND_HOST} --reload --extra-files=/templates
     depends_on:
       - backend
 
@@ -22,11 +23,9 @@ services:
       - "${BACKEND_PORT}:8000"
     links:
       - pgbouncer
-    volumes:
-      - ./backend:/app
     environment:
       JWT_SECRET: ${JWT_SECRET}
-    command: uvicorn app:app --host 0.0.0.0 --port 8000
+    command: uvicorn app:app --host ${BACKEND_HOST} --port ${BACKEND_PORT}
     depends_on:
       - pgbouncer
 
@@ -55,27 +54,27 @@ services:
       - db
     environment:
       - PGBCR_DB_NAME=${DB_NAME}
-      - PGBCR_DB_USER=${WEBAPP_DB_USER}
-      - PGBCR_DB_PASSWORD=${WEBAPP_DB_PASSWORD}
+      - PGBCR_DB_USER=${POSTGREST_DB_USER}
+      - PGBCR_DB_PASSWORD=${POSTGREST_DB_PASSWORD}
     volumes:
       - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
       - ./pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt
     ports:
-      - "${PGCR_PORT}:6432"
+      - "${PGBOUNCER_PORT}:6432"
     depends_on:
       - db
 
   postgrest:
     image: postgrest/postgrest
     environment:
-      PGRST_DB_URI: ${PGBCR_DB_URI}
-      PGRST_DB_SCHEMA: ${PGRST_DB_SCHEMA}
-      PGRST_DB_ANON_ROLE: ${PGRST_DB_ANON_ROLE}
+      PGRST_DB_URI: ${PGBOUNCER_DB_URI}
+      PGRST_DB_SCHEMA: ${POSTGREST_DB_SCHEMA}
+      PGRST_DB_ANON_ROLE: ${POSTGREST_DB_ANON_ROLE}
       PGRST_JWT_SECRET: ${JWT_SECRET}
-      PGRST_DB_POOL: ${PGRST_DB_POOL}
-      PGRST_DB_PREPARED_STATEMENTS: ${PGRST_DB_PREPARED_STATEMENTS}
+      PGRST_DB_POOL: ${POSTGREST_DB_POOL}
+      PGRST_DB_PREPARED_STATEMENTS: ${POSTGREST_DB_PREPARED_STATEMENTS}
     ports:
-      - "${PGRST_PORT}:3000"
+      - "${POSTGREST_PORT}:3000"
     links:
       - db:db
     depends_on:
@@ -119,14 +118,6 @@ services:
     command: -c "tail -f /dev/null"
     depends_on:
       - db
-
-  generate_secrets:
-    build: ./scripts/secrets_generator
-    container_name: generate_secrets
-    environment:
-      JWT_SECRET: ${JWT_SECRET}
-    entrypoint: /bin/bash
-    command: -c "tail -f /dev/null"
 
 volumes:
   db-data:

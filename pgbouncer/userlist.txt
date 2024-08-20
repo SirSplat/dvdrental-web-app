@@ -1,3 +1,4 @@
-"pgbcr_user" "mysecretpassword"
+"pgrst_authenticator" "mysecretpassword"
 "webapp_user" "mysecretpassword"
 "postgres" "mysecretpassword"
+"data_loader" "mysecretpassword"

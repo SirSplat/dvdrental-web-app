@@ -11,7 +11,11 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container
-COPY . /app
+COPY ./app.py /app
+COPY ./scripts /app/scripts
+COPY ./static /app/static
+
+ENV PYTHONPATH="/app"
 
 # Expose port 8000 for the FastAPI app
 EXPOSE 8000

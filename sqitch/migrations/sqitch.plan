@@ -10,8 +10,8 @@ roles/pgrst_anon-appschema-usage [appschema roles/pgrst_anon] 2024-08-15T15:34:3
 roles/pgrst_anon-appschema-default-privileges [appschema roles/pgrst_anon roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
 
 roles/pgrst_authenticator [appschema] 2024-08-15T15:50:47Z dbo <dbo@dvdrental.com> # Create the default role that PostgREST will connect to the application database.
-#roles/pgrst_authenticator-appschema-usage [appschema roles/pgrst_authenticator] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
-#roles/pgrst_authenticator-appschema-default-privileges [appschema roles/pgrst_authenticator roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
+# roles/pgrst_authenticator-appschema-usage [appschema roles/pgrst_authenticator] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
+# roles/pgrst_authenticator-appschema-default-privileges [appschema roles/pgrst_authenticator roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
 roles/pgrst_authenticator-member-of-pgrst_anon [roles/pgrst_anon roles/pgrst_authenticator] 2024-08-15T16:10:17Z dbo <dbo@dvdrental.com> # Make pgrst_authenticator a member of pgrst_anon, lets pgrst_authenticator assume pgrst_anon role.
 
 roles/webapp_user [appschema] 2024-08-15T15:50:47Z dbo <dbo@dvdrental.com> # Create the default role that PostgREST will connect to the application database.
@@ -24,5 +24,11 @@ tables/json_imports [appschema] 2024-08-13T15:55:27Z dbo <dbo@dvdrental.com> # C
 tables/country [appschema] 2024-08-13T16:01:37Z dbo <dbo@dvdrental.com> # Create rental.country table.
 tables/city [appschema tables/country] 2024-08-14T09:08:51Z dbo <dbo@dvdrental.com> # Create the city table.
 tables/address [appschema tables/city] 2024-08-14T09:50:01Z dbo <dbo@dvdrental.com> # Add an address table.
+tables/language [appschema tables/audit_columns] 2024-08-19T13:46:00Z dbo <dbo@dvdrental.com> # Create language table.
 
+roles/data_loader [appschema] 2024-08-19T13:34:42Z dbo <dbo@dvdrental.com> # Add user to load static data.
+roles/data_loader-appschema-usage [appschema roles/data_loader] 2024-08-19T13:40:00Z dbo <dbo@dvdrental.com> # Give data_loader USAGE on the application schema.
+roles/data_loader-table-privileges [appschema roles/data_loader tables/country tables/city tables/address tables/language] 2024-08-19T13:58:56Z dbo <dbo@dvdrental.com> # Give data_loader SELECT AND INSERT on country, city, address and language application tables.
+roles/data_loader-member-of-pgrst_authenticator [appschema roles/data_loader roles/pgrst_authenticator] 2024-08-19T14:04:15Z dbo <dbo@dvdrental.com> # Give pgrst_authenticator privileges to set role to data_loader.
 
+#data/language-initial-load [appschema tables/language] 2024-08-20T12:43:47Z dbo <dbo@dvdrental.com> # Initial rental.language static data load.

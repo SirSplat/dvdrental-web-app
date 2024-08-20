@@ -2,15 +2,21 @@
 import os
 
 import requests
-from flask import Flask, flash, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY")
+
+app.secret_key = os.getenv("JWT_SECRET")
+host = os.getenv("FRONTEND_HOST")
+port = os.getenv("FRONTEND_PORT")
+url = os.getenv("FRONTEND_URL")
+debug = os.getenv("FLASK_DEBUG")
 
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    print("Welcome to DVD Rental frontend home page.")
+    # return render_template("home.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -21,7 +27,7 @@ def login():
 
         # Send credentials to the FastAPI backend
         response = requests.post(
-            "http://backend:8000/login",
+            f"{url}/login",
             json={"username": username, "password": password},
         )
 
@@ -36,3 +42,15 @@ def login():
             return redirect(url_for("login"))
 
     return render_template("login.html")
+
+
+@app.route("/dashboard")
+def dashboard():
+    if "access_token" in session:
+        return "Welcome to the dashboard!"
+    else:
+        return redirect(url_for("login"))
+
+
+if __name__ == "__main__":
+    app.run(host=f"{host}", port=f"{port}", debug=debug)
