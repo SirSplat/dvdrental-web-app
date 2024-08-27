@@ -9,4 +9,11 @@ FROM
 WHERE
     pg_roles.rolname = 'pgrst_authenticator';
 
+SELECT
+    1 / COUNT(  pg_catalog.shobj_description( pg_roles.oid, 'pg_authid' ) )
+FROM
+    pg_catalog.pg_roles
+WHERE
+    pg_roles.rolname = 'pgrst_authenticator';
+
 ROLLBACK;

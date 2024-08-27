@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TABLE rental.json_imports;
+DROP TABLE dsa.json_imports;
 
 COMMIT;

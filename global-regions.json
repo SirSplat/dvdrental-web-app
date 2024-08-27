@@ -1,0 +1,28 @@
+{
+    "regions": [
+        {
+            "region_name": "Africa",
+            "region_code": "AF"
+        },
+        {
+            "region_name": "Americas",
+            "region_code": "AM"
+        },
+        {
+            "region_name": "Asia",
+            "region_code": "AS"
+        },
+        {
+            "region_name": "Europe",
+            "region_code": "EU"
+        },
+        {
+            "region_name": "Oceania",
+            "region_code": "OC"
+        },
+        {
+            "region_name": "Antarctica",
+            "region_code": "AQ"
+        }
+    ]
+}
