@@ -10,7 +10,6 @@ DECLARE
     iso2_count INT := 0;
     iso3_count INT := 0;
     country_code_count INT := 0;
-
 BEGIN
     SELECT
         COALESCE( COUNT( * ), 0 )
@@ -38,7 +37,6 @@ BEGIN
     ASSERT iso2_count = json_count, 'Duplicate iso2 found in dsa.json_imports.';
     ASSERT iso3_count = json_count, 'Duplicate iso3 found in dsa.json_imports.';
     ASSERT country_code_count = json_count, 'Duplicate country_code found in dsa.json_imports.';
-
 END;
 $$;
 

@@ -16,7 +16,7 @@ CREATE TABLE rental.country (
     LIKE rental.audit_columns INCLUDING DEFAULTS INCLUDING COMMENTS,
     CONSTRAINT country_fk UNIQUE ( country_fk ),
     CONSTRAINT country_subregion_fk FOREIGN KEY ( subregion_fk ) REFERENCES dsa.lkp_global_subregion ( subregion_fk ) DEFERRABLE INITIALLY IMMEDIATE,
-    CONSTRAINT country_pk PRIMARY KEY ( subregion_code, country_code ),
+    CONSTRAINT country_pk PRIMARY KEY ( subregion_fk, country_code ),
     CONSTRAINT country_code_uidx UNIQUE ( country_code ),
     CONSTRAINT country_iso2_length_chk CHECK ( LENGTH( iso2 ) = 2 ),
     CONSTRAINT country_iso2_not_empty_chk CHECK ( TRIM( iso2 ) <> '' ),
@@ -36,7 +36,7 @@ COMMENT ON COLUMN rental.country.country_name IS 'Country name, sourced from ISO
 
 COMMENT ON CONSTRAINT country_fk ON rental.country IS 'Unique constraint on country_fk.';
 COMMENT ON CONSTRAINT country_subregion_fk ON rental.country IS 'Foreign key constraint on subregion_fk (lkp_global_subregion).';
-COMMENT ON CONSTRAINT country_pk ON rental.country IS 'Primary key constraint on subregion_code, country_code (natural key).';
+COMMENT ON CONSTRAINT country_pk ON rental.country IS 'Primary key constraint on subregion_fk, country_code (natural key).';
 COMMENT ON CONSTRAINT country_code_uidx ON rental.country IS 'Unique constraint on country_code.';
 COMMENT ON CONSTRAINT country_iso2_length_chk ON rental.country IS 'Check constraint on iso2 (length = 2).';
 COMMENT ON CONSTRAINT country_iso2_not_empty_chk ON rental.country IS 'Check constraint on a trimmed iso2 (not empty).';

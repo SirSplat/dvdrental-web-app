@@ -2,6 +2,6 @@
 
 BEGIN;
 
--- XXX Add DDLs here.
+DROP FUNCTION dsa.country_etl_from_json_imports();
 
 COMMIT;

@@ -8,27 +8,28 @@ TRUNCATE TABLE dsa.json_imports;
 INSERT INTO dsa.json_imports ( val ) VALUES
     ('{
         "region_name": "Africa",
-        "region_code": "AF"
+        "region_iso2": "AF",
+        "region_code": "002"
     }'),
     ('{
         "region_name": "Americas",
-        "region_code": "AM"
+        "region_iso2": "AM",
+        "region_code": "019"
     }'),
     ('{
         "region_name": "Asia",
-        "region_code": "AS"
+        "region_iso2": "AS",
+        "region_code": "142"
     }'),
     ('{
         "region_name": "Europe",
-        "region_code": "EU"
+        "region_iso2": "EU",
+        "region_code": "150"
     }'),
     ('{
         "region_name": "Oceania",
-        "region_code": "OC"
-    }'),
-    ('{
-        "region_name": "Antarctica",
-        "region_code": "AQ"
+        "region_iso2": "OC",
+        "region_code": "009"
     }');
 
 COMMIT;

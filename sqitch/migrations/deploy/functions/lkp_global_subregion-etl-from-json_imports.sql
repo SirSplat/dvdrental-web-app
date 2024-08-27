@@ -20,7 +20,7 @@ BEGIN
         FROM
             dsa.json_imports
             JOIN dsa.lkp_global_region AS region ON (
-                region.region_code = ( json_imports.val->>'region_code' )::TEXT
+                region.region_iso2 = ( json_imports.val->>'region_iso2' )::TEXT
             ),
             json_array_elements(val->'subregions') AS subregion
     LOOP

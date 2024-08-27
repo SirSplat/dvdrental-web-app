@@ -7,7 +7,7 @@ BEGIN;
 TRUNCATE TABLE dsa.json_imports;
 INSERT INTO dsa.json_imports ( val ) VALUES
     ('{
-        "region_code": "AF",
+        "region_iso2": "AF",
         "subregions": [
             {
                 "subregion_name": "Northern Africa",
@@ -36,7 +36,7 @@ INSERT INTO dsa.json_imports ( val ) VALUES
         ]
     }'),
     ('{
-        "region_code": "AM",
+        "region_iso2": "AM",
         "subregions": [
             {
                 "subregion_name": "Northern America",
@@ -57,7 +57,7 @@ INSERT INTO dsa.json_imports ( val ) VALUES
         ]
     }'),
     ('{
-        "region_code": "AS",
+        "region_iso2": "AS",
         "subregions": [
             {
                 "subregion_name": "Central Asia",
@@ -82,7 +82,7 @@ INSERT INTO dsa.json_imports ( val ) VALUES
         ]
     }'),
     ('{
-        "region_code": "EU",
+        "region_iso2": "EU",
         "subregions": [
             {
                 "subregion_name": "Northern Europe",
@@ -103,7 +103,7 @@ INSERT INTO dsa.json_imports ( val ) VALUES
         ]
     }'),
     ('{
-        "region_code": "OC",
+        "region_iso2": "OC",
         "subregions": [
             {
                 "subregion_name": "Australia and New Zealand",
@@ -123,14 +123,5 @@ INSERT INTO dsa.json_imports ( val ) VALUES
             }
         ]
     }');
-    -- ('{
-    --     "region_code": "AQ",
-    --     "subregions": [
-    --         {
-    --             "subregion_name": "Antarctica",
-    --             "subregion_code": "AQ"
-    --         }
-    --     ]
-    -- }');
 
 COMMIT;
