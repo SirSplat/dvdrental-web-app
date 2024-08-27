@@ -1,11 +1,11 @@
--- Deploy dvdrental:functions/global_region-etl-from-json_imports to pg
+-- Deploy dvdrental:functions/lkp_global_region-etl-from-json_imports to pg
 -- requires: dsaschema
 -- requires: tables/json_imports
--- requires: tables/global_region
+-- requires: tables/lkp_global_region
 
 BEGIN;
 
-CREATE OR REPLACE FUNCTION dsa.global_region_etl_from_json_imports()
+CREATE OR REPLACE FUNCTION dsa.lkp_global_region_etl_from_json_imports()
 RETURNS VOID
 AS $$
 DECLARE
@@ -18,7 +18,7 @@ BEGIN
         FROM
             dsa.json_imports
     LOOP
-        INSERT INTO dsa.global_region (
+        INSERT INTO dsa.lkp_global_region (
             region_name,
             region_code
         ) VALUES (

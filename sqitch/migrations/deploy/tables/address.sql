@@ -1,8 +1,8 @@
 -- Deploy dvdrental:tables/address to pg
 -- requires: appschema
 -- requires: tables/audit_columns
--- requires: tables/global_region
--- requires: tables/global_subregion
+-- requires: tables/lkp_global_region
+-- requires: tables/lkp_global_subregion
 -- requires: tables/country
 -- requires: tables/city
 

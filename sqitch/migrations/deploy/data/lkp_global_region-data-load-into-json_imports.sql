@@ -1,4 +1,4 @@
--- Deploy dvdrental:data/global_region-data-load-into-json_imports to pg
+-- Deploy dvdrental:data/lkp_global_region-data-load-into-json_imports to pg
 -- requires: dsaschema
 -- requires: tables/json_imports
 

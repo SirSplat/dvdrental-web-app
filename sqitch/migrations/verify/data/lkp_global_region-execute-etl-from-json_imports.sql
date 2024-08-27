@@ -1,4 +1,4 @@
--- Verify dvdrental:data/global_region-execute-etl-from-json_imports on pg
+-- Verify dvdrental:data/lkp_global_region-execute-etl-from-json_imports on pg
 
 BEGIN;
 
@@ -21,13 +21,13 @@ BEGIN
         COALESCE( COUNT( * ), 0 ),
         COUNT( DISTINCT region_code )
     FROM
-        dsa.global_region
+        dsa.lkp_global_region
     INTO
         region_load_count,
         region_code_count;
 
-    ASSERT region_load_count = json_count, 'Incorrect number of rows in dsa.global_region.';
-    ASSERT region_code_count = json_count, 'Incorrect number of distinct region codes in dsa.global_region.';
+    ASSERT region_load_count = json_count, 'Incorrect number of rows in dsa.lkp_global_region.';
+    ASSERT region_code_count = json_count, 'Incorrect number of distinct region codes in dsa.lkp_global_region.';
 
 END;
 $$;
