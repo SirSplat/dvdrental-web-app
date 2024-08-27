@@ -16,16 +16,15 @@ BEGIN
     FOR _rec IN
         SELECT
             subregion.subregion_fk AS subregion_fk,
-            ( country->>'country_code' )::SMALLINT AS country_code,
-            ( country->>'iso2' )::TEXT AS iso2,
-            ( country->>'iso3' )::TEXT AS iso3,
-            ( country->>'country_name' )::TEXT AS country_name
+            ( val->>'country_code' )::SMALLINT AS country_code,
+            ( val->>'iso2' )::TEXT AS iso2,
+            ( val->>'iso3' )::TEXT AS iso3,
+            ( val->>'country_name' )::TEXT AS country_name
         FROM
             dsa.json_imports
             JOIN dsa.lkp_global_subregion AS subregion ON (
-                subregion.subregion_code = ( json_imports.val->>'subregion_code' )::SMALLINT
-            ),
-            json_array_elements(val->'countries') AS country
+                subregion.subregion_code = ( val->>'sub-region-code' )::SMALLINT
+            )
     LOOP
         INSERT INTO rental.country (
             subregion_fk,
