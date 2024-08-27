@@ -32,7 +32,7 @@ triggers/global_region_audit_columns_trg [appschema functions/audit_columns_trg_
 functions/global_region-etl-from-json_imports [dsaschema tables/json_imports tables/global_region data/global_region-data-load-into-json_imports] 2024-08-25T13:27:10Z dbo <dbo@dvdrental.com> # ETL: global_region from dsa.json_imports. No transformations at this time.
 data/global_region-execute-etl-from-json_imports [dsaschema tables/json_imports tables/global_region functions/global_region-etl-from-json_imports] 2024-08-26T10:38:37Z dbo <dbo@dvdrental.com> # ETL: execute dsa.global_region-etl-from-json_imports.
 
-#data/global_sub_region-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-25T13:28:59Z dbo <dbo@dvdrental.com> # Initial dsa.json_import load of static global_sub_region data.
+data/global_sub_region-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-25T13:28:59Z dbo <dbo@dvdrental.com> # Initial dsa.json_import load of static global_sub_region data.
 #tables/global_sub_region [appschema tables/global_region] 2024-08-25T13:28:14Z dbo <dbo@dvdrental.com> # Create a dsa.global_sub_region table, may be used for EDW reporting in future.
 #triggers/global_sub_region_audit_columns_trg [appschema functions/audit_columns_trg_func dsaschema tables/global_sub_region] 2024-08-26T07:51:44Z dbo <dbo@dvdrental.com> # Add audit column trigger to dsa.global_sub_region.
 #functions/global_sub_region-etl-from-json_imports [dsaschema tables/json_imports tables/global_region tables/global_sub_region] 2024-08-25T13:34:32Z dbo <dbo@dvdrental.com> # ETL: global_sub_region from dsa.json_imports. No transformations at this time.
