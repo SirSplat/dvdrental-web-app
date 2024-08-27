@@ -1,4 +1,4 @@
--- Verify dvdrental:tables/global_sub_region on pg
+-- Verify dvdrental:tables/global_subregion on pg
 
 BEGIN;
 
@@ -8,7 +8,7 @@ FROM
     information_schema.tables
 WHERE
     tables.table_schema = 'dsa' AND
-    tables.table_name = 'global_sub_region';
+    tables.table_name = 'global_subregion';
 
 SELECT
     1 / COUNT( pg_catalog.obj_description( pg_class.oid, 'pg_class' ) )
@@ -19,6 +19,6 @@ FROM
         pg_namespace.nspname = 'dsa'
     )
 WHERE
-    pg_class.relname = 'global_sub_region';
+    pg_class.relname = 'global_subregion';
 
 ROLLBACK;

@@ -1,4 +1,4 @@
--- Verify dvdrental:data/global_sub_region on pg
+-- Verify dvdrental:data/global_subregion on pg
 
 BEGIN;
 

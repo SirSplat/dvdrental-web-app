@@ -4,9 +4,11 @@
 BEGIN;
 
 CREATE TABLE dsa.global_region (
+    region_fk SMALLINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     region_code TEXT NOT NULL,
     region_name TEXT NOT NULL,
     LIKE rental.audit_columns INCLUDING COMMENTS INCLUDING DEFAULTS,
+    CONSTRAINT global_region_fk UNIQUE ( region_fk ),
     CONSTRAINT global_region_pkey PRIMARY KEY ( region_code ),
     CONSTRAINT global_region_code_length_chk CHECK ( LENGTH( region_code ) = 2 ),
     CONSTRAINT global_region_code_not_empty_chk CHECK ( BTRIM( region_code ) <> '' ),
@@ -15,9 +17,11 @@ CREATE TABLE dsa.global_region (
 
 COMMENT ON TABLE dsa.global_region IS 'Global regions. Sourced by GPT4o.';
 
+COMMENT ON COLUMN dsa.global_region.region_fk IS 'Foreign key for global_region.';
 COMMENT ON COLUMN dsa.global_region.region_name IS 'Region name.';
 COMMENT ON COLUMN dsa.global_region.region_code IS 'Region code and is the primay key.';
 
+COMMENT ON CONSTRAINT global_region_fk ON dsa.global_region IS 'Unique constraint for global_region_fk.';
 COMMENT ON CONSTRAINT global_region_pkey ON dsa.global_region IS 'Primary key constraint for global_region.';
 COMMENT ON CONSTRAINT global_region_code_length_chk ON dsa.global_region IS 'Region code must be 2 characters long.';
 COMMENT ON CONSTRAINT global_region_code_not_empty_chk ON dsa.global_region IS 'Region code must not be empty.';

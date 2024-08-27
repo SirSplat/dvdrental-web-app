@@ -1,12 +1,12 @@
--- Deploy dvdrental:functions/global_sub_region-etl-from-json_imports to pg
+-- Deploy dvdrental:functions/global_subregion-etl-from-json_imports to pg
 -- requires: dsaschema
 -- requires: tables/json_imports
 -- requires: tables/global_region
--- requires: tables/global_sub_region
+-- requires: tables/global_subregion
 
 BEGIN;
 
-CREATE OR REPLACE FUNCTION dsa.global_sub_region_etl_from_json_imports()
+CREATE OR REPLACE FUNCTION dsa.global_subregion_etl_from_json_imports()
 RETURNS VOID
 AS $$
 DECLARE
@@ -14,19 +14,22 @@ DECLARE
 BEGIN
     FOR _rec IN
         SELECT
-            ( val->>'region_code' )::TEXT AS region_code,
+            region.region_fk AS region_fk,
             ( subregion->>'subregion_name' )::TEXT AS subregion_name,
             ( subregion->>'subregion_code' )::SMALLINT AS subregion_code
         FROM
-            dsa.json_imports,
-            json_array_elements(val->'subregions') as subregion
+            dsa.json_imports
+            JOIN dsa.global_region AS region ON (
+                region.region_code = ( json_imports.val->>'region_code' )::TEXT
+            ),
+            json_array_elements(val->'subregions') AS subregion
     LOOP
-        INSERT INTO dsa.global_sub_region (
-            region_code,
+        INSERT INTO dsa.global_subregion (
+            region_fk,
             subregion_code,
             subregion_name
         ) VALUES (
-            _rec.region_code,
+            _rec.region_fk,
             _rec.subregion_code,
             _rec.subregion_name
         );

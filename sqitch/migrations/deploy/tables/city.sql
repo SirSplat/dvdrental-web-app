@@ -2,7 +2,7 @@
 -- requires: appschema
 -- requires: tables/audit_columns
 -- requires: tables/global_region
--- requires: tables/global_sub_region
+-- requires: tables/global_subregion
 -- requires: tables/country
 
 BEGIN;

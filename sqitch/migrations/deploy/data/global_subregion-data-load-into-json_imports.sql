@@ -1,4 +1,4 @@
--- Deploy dvdrental:data/global_sub_region to pg
+-- Deploy dvdrental:data/global_subregion to pg
 -- requires: dsaschema
 -- requires: tables/json_imports
 
