@@ -12,6 +12,6 @@ __pycache__/
 dist/
 build/
 
-# Nominatim
-geonames/
+# All data staging files
+scratchpad
 

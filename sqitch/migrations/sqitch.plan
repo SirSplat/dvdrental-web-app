@@ -3,56 +3,5 @@
 %uri=https://github.com/SirSplat/dvdrental.git
 
 
-dsaschema 2024-08-21T11:55:11Z dbo <dbo@dvdrental.com> # Create the data staging area schema, this should only be accessed by the DBO role.
-tables/json_imports [dsaschema] 2024-08-13T15:55:27Z dbo <dbo@dvdrental.com> # Create a single column of json type for data imports.
-
-appschema 2024-08-13T12:33:59Z dbo <dbo@dvdrental.com> # Create DVD Rental application schema.
-
-# Globals
-roles/pgrst_anon [appschema] 2024-08-15T15:30:32Z dbo <dbo@dvdrental.com> # Create PostgREST anonymous user, serves anonymous web requests. PostgREST will switch to this role in the database to run queries.
-roles/pgrst_anon-appschema-usage [appschema roles/pgrst_anon] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
-roles/pgrst_anon-appschema-default-privileges [appschema roles/pgrst_anon roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
-
-roles/pgrst_authenticator [appschema] 2024-08-15T15:50:47Z dbo <dbo@dvdrental.com> # Create the default role that PostgREST will connect to the application database.
-# roles/pgrst_authenticator-appschema-usage [appschema roles/pgrst_authenticator] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
-# roles/pgrst_authenticator-appschema-default-privileges [appschema roles/pgrst_authenticator roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
-roles/pgrst_authenticator-member-of-pgrst_anon [roles/pgrst_anon roles/pgrst_authenticator] 2024-08-15T16:10:17Z dbo <dbo@dvdrental.com> # Make pgrst_authenticator a member of pgrst_anon, lets pgrst_authenticator assume pgrst_anon role.
-
-roles/webapp_user [appschema] 2024-08-15T15:50:47Z dbo <dbo@dvdrental.com> # Create the default role that PostgREST will connect to the application database.
-roles/webapp_user-appschema-usage [appschema roles/webapp_user] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
-roles/webapp_user-appschema-default-privileges [appschema roles/webapp_user roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
-roles/webapp_user-member-of-pgrst_authenticator [roles/webapp_user roles/pgrst_authenticator] 2024-08-15T16:10:17Z dbo <dbo@dvdrental.com> # Make webapp_user a member of pgrst_authenticator, lets pgrst_authenticator assume webapp_user role.
-
-tables/audit_columns [appschema] 2024-08-13T15:36:38Z dbo <dbo@dvdrental.com> # Create a table containing business standardised auti columns. To be included in every table!
-functions/audit_columns_trg_func [appschema tables/audit_columns] 2024-08-26T07:13:25Z dbo <dbo@dvdrental.com> # Used to update the correct audit columns depending on TG_OP.
-
-data/lkp_global_region-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-25T12:53:48Z dbo <dbo@dvdrental.com> # Initial dsa.json_import load of static lkp_global_region data.
-tables/lkp_global_region [dsaschema] 2024-08-25T13:09:38Z dbo <dbo@dvdrental.com> # Create a dsa.lkp_global_region table, may be used for EDW reporting in future.
-triggers/lkp_global_region_audit_columns_trg [appschema functions/audit_columns_trg_func dsaschema tables/lkp_global_region] 2024-08-26T07:51:44Z dbo <dbo@dvdrental.com> # Add audit column trigger to dsa.lkp_global_region.
-functions/lkp_global_region-etl-from-json_imports [dsaschema tables/json_imports tables/lkp_global_region data/lkp_global_region-data-load-into-json_imports] 2024-08-25T13:27:10Z dbo <dbo@dvdrental.com> # ETL: lkp_global_region from dsa.json_imports.
-data/lkp_global_region-execute-etl-from-json_imports [dsaschema tables/json_imports tables/lkp_global_region functions/lkp_global_region-etl-from-json_imports] 2024-08-26T10:38:37Z dbo <dbo@dvdrental.com> # ETL: execute dsa.lkp_global_region-etl-from-json_imports.
-
-data/lkp_global_subregion-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-25T13:28:59Z dbo <dbo@dvdrental.com> # Initial dsa.json_import load of static lkp_global_subregion data.
-tables/lkp_global_subregion [appschema tables/lkp_global_region] 2024-08-25T13:28:14Z dbo <dbo@dvdrental.com> # Create a dsa.lkp_global_subregion table, may be used for EDW reporting in future.
-triggers/lkp_global_subregion_audit_columns_trg [appschema functions/audit_columns_trg_func dsaschema tables/lkp_global_subregion] 2024-08-26T07:51:44Z dbo <dbo@dvdrental.com> # Add audit column trigger to dsa.lkp_global_subregion.
-functions/lkp_global_subregion-etl-from-json_imports [dsaschema tables/json_imports tables/lkp_global_region tables/lkp_global_subregion] 2024-08-25T13:34:32Z dbo <dbo@dvdrental.com> # ETL: lkp_global_subregion from dsa.json_imports.
-data/lkp_global_subregion-execute-etl-from-json_imports [dsaschema tables/json_imports tables/lkp_global_region tables/lkp_global_subregion functions/lkp_global_subregion-etl-from-json_imports] 2024-08-27T08:08:07Z dbo <dbo@dvdrental.com> # ETL: execute dsa.lkp_global_subregion-etl-from-json_imports.
-
-data/country-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-20T13:21:27Z dbo <dbo@dvdrental.com> # Initial dsa.json_import static data load.
-tables/country [appschema tables/audit_columns dsaschema tables/lkp_global_subregion] 2024-08-13T16:01:37Z dbo <dbo@dvdrental.com> # Create rental.country table.
-functions/country-etl-from-json_imports [dsaschema tables/json_imports tables/lkp_global_subregion appschema tables/country] 2024-08-25T13:33:25Z dbo <dbo@dvdrental.com> # ETL: rental.country from dsa.json_imports.
-data/country-execute-etl-from-json_imports [dsaschema tables/json_imports tables/lkp_global_region tables/lkp_global_subregion functions/country-etl-from-json_imports appschema tables/country] 2024-08-27T12:05:15Z dbo <dbo@dvdrental.com> # ETL: execute dsa.country-etl-from-json_imports.
-
-# data/city-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-20T13:22:00Z dbo <dbo@dvdrental.com> # Initial dsa.json_import static data load.
-# tables/city [appschema tables/audit_columns tables/country] 2024-08-14T09:08:51Z dbo <dbo@dvdrental.com> # Create the city table.
-# functions/city-etl-from-json_imports [dsaschema tables/json_imports appschema tables/country tables/city] 2024-08-25T13:36:32Z dbo <dbo@dvdrental.com> # ETL: rental.city from dsa.json_imports.
-
-# data/address-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-20T13:22:51Z dbo <dbo@dvdrental.com> # Initial dsa.json_import static data load.
-# tables/address [appschema tables/audit_columns tables/country tables/city] 2024-08-14T09:50:01Z dbo <dbo@dvdrental.com> # Add an address table.
-# functions/address-etl-from-json_imports [dsaschema tables/json_imports appschema tables/country tables/city tables/address] 2024-08-25T13:37:23Z dbo <dbo@dvdrental.com> # ETL: rental.address from dsa.json_imports.
-
-# data/language-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-20T12:43:47Z dbo <dbo@dvdrental.com> # Initial dsa.json_import static data load.
-# tables/language [appschema tables/audit_columns] 2024-08-19T13:46:00Z dbo <dbo@dvdrental.com> # Create language table.
-# functions/language-etl-from-json_imports [dsaschema tables/json_imports appschema tables/language] 2024-08-25T13:38:13Z dbo <dbo@dvdrental.com> # ETL: rental.language from dsa.json_imports.
-
-
+dsa-schema/dsa 2024-09-24T15:43:37Z dbo <dbo@dvdrental.com> # Add dsa schema. Home of all things ETL.
+rental-schema/rental 2024-10-03T09:42:14Z dbo <dbo@dvdrental.com> # Add rental schema. Home of all things rental.

@@ -35,6 +35,8 @@ services:
     build: ./db
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ./scratchpad/output:/mnt/output
+      - ./scratchpad/input:/mnt/input
     environment:
       POSTGRES_DB: ${PGSQL_DB}
       POSTGRES_USER: ${PGSQL_USER}
@@ -82,7 +84,8 @@ services:
       - db
 
   sqitch:
-    image: sqitch/sqitch:latest
+    # image: sqitch/sqitch:latest
+    build: ./sqitch
     container_name: sqitch
     links:
       - db
@@ -94,10 +97,13 @@ services:
     user: sqitch
     volumes:
       - ./sqitch/.sqitch/sqitch.conf:/home/.sqitch/sqitch.conf
+      - ./sqitch/.sqitch/templates:/home/.sqitch/templates
       - ./.pgpass:/home/.pgpass:ro
       - ./sqitch/sqitch.sh:/home/sqitch.sh
       - ./sqitch/migrations/:/mnt/migrations/
       - ./sqitch/migrations/sqitch.conf:/mnt/migrations/sqitch.conf
+      - ./scratchpad/output:/mnt/output
+      - ./scratchpad/input:/mnt/input
     working_dir: /mnt/migrations
     entrypoint: /bin/bash
     command: -c "tail -f /dev/null"

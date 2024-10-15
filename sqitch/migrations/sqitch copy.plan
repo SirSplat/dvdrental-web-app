@@ -1,0 +1,255 @@
+%syntax-version=1.0.0
+%project=dvdrental
+%uri=https://github.com/SirSplat/dvdrental.git
+
+
+#dsaschema 2024-08-21T11:55:11Z dbo <dbo@dvdrental.com> # Create the data staging area schema, this should only be accessed by the DBO role.
+#tables/json_imports [dsaschema] 2024-08-13T15:55:27Z dbo <dbo@dvdrental.com> # Create a single column of json type for data imports.
+#appschema 2024-08-13T12:33:59Z dbo <dbo@dvdrental.com> # Create DVD Rental application schema.
+
+# Globals
+#roles/pgrst_anon [appschema] 2024-08-15T15:30:32Z dbo <dbo@dvdrental.com> # Create PostgREST anonymous user, serves anonymous web requests. PostgREST will switch to this role in the database to run queries.
+#roles/pgrst_anon-appschema-usage [appschema roles/pgrst_anon] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
+#roles/pgrst_anon-appschema-default-privileges [appschema roles/pgrst_anon roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
+#roles/pgrst_authenticator [appschema] 2024-08-15T15:50:47Z dbo <dbo@dvdrental.com> # Create the default role that PostgREST will connect to the application database.
+## roles/pgrst_authenticator-appschema-usage [appschema roles/pgrst_authenticator] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
+## roles/pgrst_authenticator-appschema-default-privileges [appschema roles/pgrst_authenticator roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
+#roles/pgrst_authenticator-member-of-pgrst_anon [roles/pgrst_anon roles/pgrst_authenticator] 2024-08-15T16:10:17Z dbo <dbo@dvdrental.com> # Make pgrst_authenticator a member of pgrst_anon, lets pgrst_authenticator assume pgrst_anon role.
+#roles/webapp_user [appschema] 2024-08-15T15:50:47Z dbo <dbo@dvdrental.com> # Create the default role that PostgREST will connect to the application database.
+#roles/webapp_user-appschema-usage [appschema roles/webapp_user] 2024-08-15T15:34:35Z dbo <dbo@dvdrental.com> # Only let PostgREST see the contents of the application schema, rental.
+#roles/webapp_user-appschema-default-privileges [appschema roles/webapp_user roles/pgrst_anon-appschema-usage] 2024-08-15T15:38:32Z dbo <dbo@dvdrental.com> # Only give the anonymous user SELECT privileges by default.
+#roles/webapp_user-member-of-pgrst_authenticator [roles/webapp_user roles/pgrst_authenticator] 2024-08-15T16:10:17Z dbo <dbo@dvdrental.com> # Make webapp_user a member of pgrst_authenticator, lets pgrst_authenticator assume webapp_user role.
+
+#tables/audit_columns [appschema] 2024-08-13T15:36:38Z dbo <dbo@dvdrental.com> # Create a table containing business standardised auti columns. To be included in every table!
+#functions/audit_columns_trg_func [appschema tables/audit_columns] 2024-08-26T07:13:25Z dbo <dbo@dvdrental.com> # Used to update the correct audit columns depending on TG_OP.
+
+# tables/lkp_global_region [dsaschema] 2024-08-25T13:09:38Z dbo <dbo@dvdrental.com> # Create a dsa.lkp_global_region table, may be used for EDW reporting in future.
+# data/lkp_global_region-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-25T12:53:48Z dbo <dbo@dvdrental.com> # Initial dsa.json_import load of static lkp_global_region data.
+# functions/lkp_global_region-etl-from-json_imports [dsaschema tables/json_imports tables/lkp_global_region data/lkp_global_region-data-load-into-json_imports] 2024-08-25T13:27:10Z dbo <dbo@dvdrental.com> # ETL: lkp_global_region from dsa.json_imports.
+# data/lkp_global_region-execute-etl-from-json_imports [dsaschema tables/json_imports tables/lkp_global_region functions/lkp_global_region-etl-from-json_imports] 2024-08-26T10:38:37Z dbo <dbo@dvdrental.com> # ETL: execute dsa.lkp_global_region-etl-from-json_imports.
+
+# tables/lkp_global_subregion [appschema tables/lkp_global_region] 2024-08-25T13:28:14Z dbo <dbo@dvdrental.com> # Create a dsa.lkp_global_subregion table, may be used for EDW reporting in future.
+# data/lkp_global_subregion-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-25T13:28:59Z dbo <dbo@dvdrental.com> # Initial dsa.json_import load of static lkp_global_subregion data.
+# functions/lkp_global_subregion-etl-from-json_imports [dsaschema tables/json_imports tables/lkp_global_region tables/lkp_global_subregion] 2024-08-25T13:34:32Z dbo <dbo@dvdrental.com> # ETL: lkp_global_subregion from dsa.json_imports.
+# data/lkp_global_subregion-execute-etl-from-json_imports [dsaschema tables/json_imports tables/lkp_global_region tables/lkp_global_subregion functions/lkp_global_subregion-etl-from-json_imports] 2024-08-27T08:08:07Z dbo <dbo@dvdrental.com> # ETL: execute dsa.lkp_global_subregion-etl-from-json_imports.
+
+#tables/country [appschema tables/audit_columns] 2024-08-13T16:01:37Z dbo <dbo@dvdrental.com> # Create rental.country table.
+#triggers/country_audit_columns_trg [appschema functions/audit_columns_trg_func tables/country] 2024-08-28T14:25:35Z dbo <dbo@dvdrental.com> # Add audit column trigger.
+#data/country-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-20T13:21:27Z dbo <dbo@dvdrental.com> # Initial dsa.json_import static data load.
+#functions/country-etl-from-json_imports [dsaschema tables/json_imports appschema tables/country] 2024-08-25T13:33:25Z dbo <dbo@dvdrental.com> # ETL: rental.country from dsa.json_imports.
+#data/country-execute-etl-from-json_imports [dsaschema tables/json_imports functions/country-etl-from-json_imports appschema tables/country] 2024-08-27T12:05:15Z dbo <dbo@dvdrental.com> # ETL: execute dsa.country-etl-from-json_imports.
+
+# tables/city [appschema tables/audit_columns tables/country] 2024-08-14T09:08:51Z dbo <dbo@dvdrental.com> # Create the city table.
+# triggers/city_audit_columns_trg [appschema functions/audit_columns_trg_func tables/city] 2024-08-28T14:26:45Z dbo <dbo@dvdrental.com> # Add audit column trigger.
+# tables/partitions/city/city_default [appschema tables/city] 2024-08-29T13:53:25Z dbo <dbo@dvdrental.com> # Create rental.city_default partition of rental.city
+# tables/partitions/city/city_004_af [appschema tables/city] 2024-08-29T13:53:26Z dbo <dbo@dvdrental.com> # Create rental.city_004_af partition of rental.city
+# tables/partitions/city/city_008_al [appschema tables/city] 2024-08-29T13:53:26Z dbo <dbo@dvdrental.com> # Create rental.city_008_al partition of rental.city
+# tables/partitions/city/city_012_dz [appschema tables/city] 2024-08-29T13:53:26Z dbo <dbo@dvdrental.com> # Create rental.city_012_dz partition of rental.city
+# tables/partitions/city/city_016_as [appschema tables/city] 2024-08-29T13:53:27Z dbo <dbo@dvdrental.com> # Create rental.city_016_as partition of rental.city
+# tables/partitions/city/city_020_ad [appschema tables/city] 2024-08-29T13:53:27Z dbo <dbo@dvdrental.com> # Create rental.city_020_ad partition of rental.city
+# tables/partitions/city/city_024_ao [appschema tables/city] 2024-08-29T13:53:27Z dbo <dbo@dvdrental.com> # Create rental.city_024_ao partition of rental.city
+# tables/partitions/city/city_031_az [appschema tables/city] 2024-08-29T13:53:28Z dbo <dbo@dvdrental.com> # Create rental.city_031_az partition of rental.city
+# tables/partitions/city/city_036_au [appschema tables/city] 2024-08-29T13:53:28Z dbo <dbo@dvdrental.com> # Create rental.city_036_au partition of rental.city
+# tables/partitions/city/city_040_at [appschema tables/city] 2024-08-29T13:53:28Z dbo <dbo@dvdrental.com> # Create rental.city_040_at partition of rental.city
+# tables/partitions/city/city_048_bh [appschema tables/city] 2024-08-29T13:53:29Z dbo <dbo@dvdrental.com> # Create rental.city_048_bh partition of rental.city
+# tables/partitions/city/city_050_bd [appschema tables/city] 2024-08-29T13:53:29Z dbo <dbo@dvdrental.com> # Create rental.city_050_bd partition of rental.city
+# tables/partitions/city/city_051_am [appschema tables/city] 2024-08-29T13:53:29Z dbo <dbo@dvdrental.com> # Create rental.city_051_am partition of rental.city
+# tables/partitions/city/city_056_be [appschema tables/city] 2024-08-29T13:53:30Z dbo <dbo@dvdrental.com> # Create rental.city_056_be partition of rental.city
+# tables/partitions/city/city_060_bm [appschema tables/city] 2024-08-29T13:53:30Z dbo <dbo@dvdrental.com> # Create rental.city_060_bm partition of rental.city
+# tables/partitions/city/city_064_bt [appschema tables/city] 2024-08-29T13:53:30Z dbo <dbo@dvdrental.com> # Create rental.city_064_bt partition of rental.city
+# tables/partitions/city/city_070_ba [appschema tables/city] 2024-08-29T13:53:31Z dbo <dbo@dvdrental.com> # Create rental.city_070_ba partition of rental.city
+# tables/partitions/city/city_072_bw [appschema tables/city] 2024-08-29T13:53:31Z dbo <dbo@dvdrental.com> # Create rental.city_072_bw partition of rental.city
+# tables/partitions/city/city_086_io [appschema tables/city] 2024-08-29T13:53:31Z dbo <dbo@dvdrental.com> # Create rental.city_086_io partition of rental.city
+# tables/partitions/city/city_090_sb [appschema tables/city] 2024-08-29T13:53:31Z dbo <dbo@dvdrental.com> # Create rental.city_090_sb partition of rental.city
+# tables/partitions/city/city_096_bn [appschema tables/city] 2024-08-29T13:53:32Z dbo <dbo@dvdrental.com> # Create rental.city_096_bn partition of rental.city
+# tables/partitions/city/city_100_bg [appschema tables/city] 2024-08-29T13:53:32Z dbo <dbo@dvdrental.com> # Create rental.city_100_bg partition of rental.city
+# tables/partitions/city/city_104_mm [appschema tables/city] 2024-08-29T13:53:32Z dbo <dbo@dvdrental.com> # Create rental.city_104_mm partition of rental.city
+# tables/partitions/city/city_108_bi [appschema tables/city] 2024-08-29T13:53:32Z dbo <dbo@dvdrental.com> # Create rental.city_108_bi partition of rental.city
+# tables/partitions/city/city_112_by [appschema tables/city] 2024-08-29T13:53:33Z dbo <dbo@dvdrental.com> # Create rental.city_112_by partition of rental.city
+# tables/partitions/city/city_116_kh [appschema tables/city] 2024-08-29T13:53:33Z dbo <dbo@dvdrental.com> # Create rental.city_116_kh partition of rental.city
+# tables/partitions/city/city_120_cm [appschema tables/city] 2024-08-29T13:53:33Z dbo <dbo@dvdrental.com> # Create rental.city_120_cm partition of rental.city
+# tables/partitions/city/city_124_ca [appschema tables/city] 2024-08-29T13:53:33Z dbo <dbo@dvdrental.com> # Create rental.city_124_ca partition of rental.city
+# tables/partitions/city/city_132_cv [appschema tables/city] 2024-08-29T13:53:34Z dbo <dbo@dvdrental.com> # Create rental.city_132_cv partition of rental.city
+# tables/partitions/city/city_140_cf [appschema tables/city] 2024-08-29T13:53:34Z dbo <dbo@dvdrental.com> # Create rental.city_140_cf partition of rental.city
+# tables/partitions/city/city_144_lk [appschema tables/city] 2024-08-29T13:53:34Z dbo <dbo@dvdrental.com> # Create rental.city_144_lk partition of rental.city
+# tables/partitions/city/city_148_td [appschema tables/city] 2024-08-29T13:53:34Z dbo <dbo@dvdrental.com> # Create rental.city_148_td partition of rental.city
+# tables/partitions/city/city_156_cn [appschema tables/city] 2024-08-29T13:53:35Z dbo <dbo@dvdrental.com> # Create rental.city_156_cn partition of rental.city
+# tables/partitions/city/city_162_cx [appschema tables/city] 2024-08-29T13:53:35Z dbo <dbo@dvdrental.com> # Create rental.city_162_cx partition of rental.city
+# tables/partitions/city/city_166_cc [appschema tables/city] 2024-08-29T13:53:35Z dbo <dbo@dvdrental.com> # Create rental.city_166_cc partition of rental.city
+# tables/partitions/city/city_174_km [appschema tables/city] 2024-08-29T13:53:35Z dbo <dbo@dvdrental.com> # Create rental.city_174_km partition of rental.city
+# tables/partitions/city/city_175_yt [appschema tables/city] 2024-08-29T13:53:36Z dbo <dbo@dvdrental.com> # Create rental.city_175_yt partition of rental.city
+# tables/partitions/city/city_178_cg [appschema tables/city] 2024-08-29T13:53:36Z dbo <dbo@dvdrental.com> # Create rental.city_178_cg partition of rental.city
+# tables/partitions/city/city_180_cd [appschema tables/city] 2024-08-29T13:53:36Z dbo <dbo@dvdrental.com> # Create rental.city_180_cd partition of rental.city
+# tables/partitions/city/city_184_ck [appschema tables/city] 2024-08-29T13:53:36Z dbo <dbo@dvdrental.com> # Create rental.city_184_ck partition of rental.city
+# tables/partitions/city/city_191_hr [appschema tables/city] 2024-08-29T13:53:37Z dbo <dbo@dvdrental.com> # Create rental.city_191_hr partition of rental.city
+# tables/partitions/city/city_196_cy [appschema tables/city] 2024-08-29T13:53:37Z dbo <dbo@dvdrental.com> # Create rental.city_196_cy partition of rental.city
+# tables/partitions/city/city_203_cz [appschema tables/city] 2024-08-29T13:53:37Z dbo <dbo@dvdrental.com> # Create rental.city_203_cz partition of rental.city
+# tables/partitions/city/city_204_bj [appschema tables/city] 2024-08-29T13:53:37Z dbo <dbo@dvdrental.com> # Create rental.city_204_bj partition of rental.city
+# tables/partitions/city/city_208_dk [appschema tables/city] 2024-08-29T13:53:38Z dbo <dbo@dvdrental.com> # Create rental.city_208_dk partition of rental.city
+# tables/partitions/city/city_226_gq [appschema tables/city] 2024-08-29T13:53:38Z dbo <dbo@dvdrental.com> # Create rental.city_226_gq partition of rental.city
+# tables/partitions/city/city_231_et [appschema tables/city] 2024-08-29T13:53:38Z dbo <dbo@dvdrental.com> # Create rental.city_231_et partition of rental.city
+# tables/partitions/city/city_232_er [appschema tables/city] 2024-08-29T13:53:38Z dbo <dbo@dvdrental.com> # Create rental.city_232_er partition of rental.city
+# tables/partitions/city/city_233_ee [appschema tables/city] 2024-08-29T13:53:39Z dbo <dbo@dvdrental.com> # Create rental.city_233_ee partition of rental.city
+# tables/partitions/city/city_234_fo [appschema tables/city] 2024-08-29T13:53:39Z dbo <dbo@dvdrental.com> # Create rental.city_234_fo partition of rental.city
+# tables/partitions/city/city_242_fj [appschema tables/city] 2024-08-29T13:53:39Z dbo <dbo@dvdrental.com> # Create rental.city_242_fj partition of rental.city
+# tables/partitions/city/city_246_fi [appschema tables/city] 2024-08-29T13:53:39Z dbo <dbo@dvdrental.com> # Create rental.city_246_fi partition of rental.city
+# tables/partitions/city/city_248_ax [appschema tables/city] 2024-08-29T13:53:40Z dbo <dbo@dvdrental.com> # Create rental.city_248_ax partition of rental.city
+# tables/partitions/city/city_250_fr [appschema tables/city] 2024-08-29T13:53:40Z dbo <dbo@dvdrental.com> # Create rental.city_250_fr partition of rental.city
+# tables/partitions/city/city_258_pf [appschema tables/city] 2024-08-29T13:53:40Z dbo <dbo@dvdrental.com> # Create rental.city_258_pf partition of rental.city
+# tables/partitions/city/city_260_tf [appschema tables/city] 2024-08-29T13:53:40Z dbo <dbo@dvdrental.com> # Create rental.city_260_tf partition of rental.city
+# tables/partitions/city/city_262_dj [appschema tables/city] 2024-08-29T13:53:41Z dbo <dbo@dvdrental.com> # Create rental.city_262_dj partition of rental.city
+# tables/partitions/city/city_266_ga [appschema tables/city] 2024-08-29T13:53:41Z dbo <dbo@dvdrental.com> # Create rental.city_266_ga partition of rental.city
+# tables/partitions/city/city_268_ge [appschema tables/city] 2024-08-29T13:53:41Z dbo <dbo@dvdrental.com> # Create rental.city_268_ge partition of rental.city
+# tables/partitions/city/city_270_gm [appschema tables/city] 2024-08-29T13:53:41Z dbo <dbo@dvdrental.com> # Create rental.city_270_gm partition of rental.city
+# tables/partitions/city/city_275_ps [appschema tables/city] 2024-08-29T13:53:42Z dbo <dbo@dvdrental.com> # Create rental.city_275_ps partition of rental.city
+# tables/partitions/city/city_276_de [appschema tables/city] 2024-08-29T13:53:42Z dbo <dbo@dvdrental.com> # Create rental.city_276_de partition of rental.city
+# tables/partitions/city/city_288_gh [appschema tables/city] 2024-08-29T13:53:42Z dbo <dbo@dvdrental.com> # Create rental.city_288_gh partition of rental.city
+# tables/partitions/city/city_292_gi [appschema tables/city] 2024-08-29T13:53:43Z dbo <dbo@dvdrental.com> # Create rental.city_292_gi partition of rental.city
+# tables/partitions/city/city_296_ki [appschema tables/city] 2024-08-29T13:53:43Z dbo <dbo@dvdrental.com> # Create rental.city_296_ki partition of rental.city
+# tables/partitions/city/city_300_gr [appschema tables/city] 2024-08-29T13:53:43Z dbo <dbo@dvdrental.com> # Create rental.city_300_gr partition of rental.city
+# tables/partitions/city/city_304_gl [appschema tables/city] 2024-08-29T13:53:43Z dbo <dbo@dvdrental.com> # Create rental.city_304_gl partition of rental.city
+# tables/partitions/city/city_316_gu [appschema tables/city] 2024-08-29T13:53:44Z dbo <dbo@dvdrental.com> # Create rental.city_316_gu partition of rental.city
+# tables/partitions/city/city_324_gn [appschema tables/city] 2024-08-29T13:53:44Z dbo <dbo@dvdrental.com> # Create rental.city_324_gn partition of rental.city
+# tables/partitions/city/city_334_hm [appschema tables/city] 2024-08-29T13:53:44Z dbo <dbo@dvdrental.com> # Create rental.city_334_hm partition of rental.city
+# tables/partitions/city/city_336_va [appschema tables/city] 2024-08-29T13:53:44Z dbo <dbo@dvdrental.com> # Create rental.city_336_va partition of rental.city
+# tables/partitions/city/city_344_hk [appschema tables/city] 2024-08-29T13:53:45Z dbo <dbo@dvdrental.com> # Create rental.city_344_hk partition of rental.city
+# tables/partitions/city/city_348_hu [appschema tables/city] 2024-08-29T13:53:45Z dbo <dbo@dvdrental.com> # Create rental.city_348_hu partition of rental.city
+# tables/partitions/city/city_352_is [appschema tables/city] 2024-08-29T13:53:45Z dbo <dbo@dvdrental.com> # Create rental.city_352_is partition of rental.city
+# tables/partitions/city/city_356_in [appschema tables/city] 2024-08-29T13:53:45Z dbo <dbo@dvdrental.com> # Create rental.city_356_in partition of rental.city
+# tables/partitions/city/city_360_id [appschema tables/city] 2024-08-29T13:53:46Z dbo <dbo@dvdrental.com> # Create rental.city_360_id partition of rental.city
+# tables/partitions/city/city_364_ir [appschema tables/city] 2024-08-29T13:53:46Z dbo <dbo@dvdrental.com> # Create rental.city_364_ir partition of rental.city
+# tables/partitions/city/city_368_iq [appschema tables/city] 2024-08-29T13:53:46Z dbo <dbo@dvdrental.com> # Create rental.city_368_iq partition of rental.city
+# tables/partitions/city/city_372_ie [appschema tables/city] 2024-08-29T13:53:46Z dbo <dbo@dvdrental.com> # Create rental.city_372_ie partition of rental.city
+# tables/partitions/city/city_376_il [appschema tables/city] 2024-08-29T13:53:47Z dbo <dbo@dvdrental.com> # Create rental.city_376_il partition of rental.city
+# tables/partitions/city/city_380_it [appschema tables/city] 2024-08-29T13:53:47Z dbo <dbo@dvdrental.com> # Create rental.city_380_it partition of rental.city
+# tables/partitions/city/city_384_ci [appschema tables/city] 2024-08-29T13:53:47Z dbo <dbo@dvdrental.com> # Create rental.city_384_ci partition of rental.city
+# tables/partitions/city/city_392_jp [appschema tables/city] 2024-08-29T13:53:47Z dbo <dbo@dvdrental.com> # Create rental.city_392_jp partition of rental.city
+# tables/partitions/city/city_398_kz [appschema tables/city] 2024-08-29T13:53:48Z dbo <dbo@dvdrental.com> # Create rental.city_398_kz partition of rental.city
+# tables/partitions/city/city_400_jo [appschema tables/city] 2024-08-29T13:53:48Z dbo <dbo@dvdrental.com> # Create rental.city_400_jo partition of rental.city
+# tables/partitions/city/city_404_ke [appschema tables/city] 2024-08-29T13:53:48Z dbo <dbo@dvdrental.com> # Create rental.city_404_ke partition of rental.city
+# tables/partitions/city/city_408_kp [appschema tables/city] 2024-08-29T13:53:48Z dbo <dbo@dvdrental.com> # Create rental.city_408_kp partition of rental.city
+# tables/partitions/city/city_410_kr [appschema tables/city] 2024-08-29T13:53:49Z dbo <dbo@dvdrental.com> # Create rental.city_410_kr partition of rental.city
+# tables/partitions/city/city_414_kw [appschema tables/city] 2024-08-29T13:53:49Z dbo <dbo@dvdrental.com> # Create rental.city_414_kw partition of rental.city
+# tables/partitions/city/city_417_kg [appschema tables/city] 2024-08-29T13:53:49Z dbo <dbo@dvdrental.com> # Create rental.city_417_kg partition of rental.city
+# tables/partitions/city/city_418_la [appschema tables/city] 2024-08-29T13:53:49Z dbo <dbo@dvdrental.com> # Create rental.city_418_la partition of rental.city
+# tables/partitions/city/city_422_lb [appschema tables/city] 2024-08-29T13:53:50Z dbo <dbo@dvdrental.com> # Create rental.city_422_lb partition of rental.city
+# tables/partitions/city/city_426_ls [appschema tables/city] 2024-08-29T13:53:50Z dbo <dbo@dvdrental.com> # Create rental.city_426_ls partition of rental.city
+# tables/partitions/city/city_428_lv [appschema tables/city] 2024-08-29T13:53:50Z dbo <dbo@dvdrental.com> # Create rental.city_428_lv partition of rental.city
+# tables/partitions/city/city_430_lr [appschema tables/city] 2024-08-29T13:53:50Z dbo <dbo@dvdrental.com> # Create rental.city_430_lr partition of rental.city
+# tables/partitions/city/city_434_ly [appschema tables/city] 2024-08-29T13:53:51Z dbo <dbo@dvdrental.com> # Create rental.city_434_ly partition of rental.city
+# tables/partitions/city/city_438_li [appschema tables/city] 2024-08-29T13:53:51Z dbo <dbo@dvdrental.com> # Create rental.city_438_li partition of rental.city
+# tables/partitions/city/city_440_lt [appschema tables/city] 2024-08-29T13:53:51Z dbo <dbo@dvdrental.com> # Create rental.city_440_lt partition of rental.city
+# tables/partitions/city/city_442_lu [appschema tables/city] 2024-08-29T13:53:51Z dbo <dbo@dvdrental.com> # Create rental.city_442_lu partition of rental.city
+# tables/partitions/city/city_446_mo [appschema tables/city] 2024-08-29T13:53:52Z dbo <dbo@dvdrental.com> # Create rental.city_446_mo partition of rental.city
+# tables/partitions/city/city_450_mg [appschema tables/city] 2024-08-29T13:53:52Z dbo <dbo@dvdrental.com> # Create rental.city_450_mg partition of rental.city
+# tables/partitions/city/city_454_mw [appschema tables/city] 2024-08-29T13:53:52Z dbo <dbo@dvdrental.com> # Create rental.city_454_mw partition of rental.city
+# tables/partitions/city/city_458_my [appschema tables/city] 2024-08-29T13:53:52Z dbo <dbo@dvdrental.com> # Create rental.city_458_my partition of rental.city
+# tables/partitions/city/city_462_mv [appschema tables/city] 2024-08-29T13:53:53Z dbo <dbo@dvdrental.com> # Create rental.city_462_mv partition of rental.city
+# tables/partitions/city/city_466_ml [appschema tables/city] 2024-08-29T13:53:53Z dbo <dbo@dvdrental.com> # Create rental.city_466_ml partition of rental.city
+# tables/partitions/city/city_470_mt [appschema tables/city] 2024-08-29T13:53:53Z dbo <dbo@dvdrental.com> # Create rental.city_470_mt partition of rental.city
+# tables/partitions/city/city_478_mr [appschema tables/city] 2024-08-29T13:53:53Z dbo <dbo@dvdrental.com> # Create rental.city_478_mr partition of rental.city
+# tables/partitions/city/city_480_mu [appschema tables/city] 2024-08-29T13:53:54Z dbo <dbo@dvdrental.com> # Create rental.city_480_mu partition of rental.city
+# tables/partitions/city/city_492_mc [appschema tables/city] 2024-08-29T13:53:54Z dbo <dbo@dvdrental.com> # Create rental.city_492_mc partition of rental.city
+# tables/partitions/city/city_496_mn [appschema tables/city] 2024-08-29T13:53:54Z dbo <dbo@dvdrental.com> # Create rental.city_496_mn partition of rental.city
+# tables/partitions/city/city_498_md [appschema tables/city] 2024-08-29T13:53:54Z dbo <dbo@dvdrental.com> # Create rental.city_498_md partition of rental.city
+# tables/partitions/city/city_499_me [appschema tables/city] 2024-08-29T13:53:55Z dbo <dbo@dvdrental.com> # Create rental.city_499_me partition of rental.city
+# tables/partitions/city/city_504_ma [appschema tables/city] 2024-08-29T13:53:55Z dbo <dbo@dvdrental.com> # Create rental.city_504_ma partition of rental.city
+# tables/partitions/city/city_508_mz [appschema tables/city] 2024-08-29T13:53:55Z dbo <dbo@dvdrental.com> # Create rental.city_508_mz partition of rental.city
+# tables/partitions/city/city_512_om [appschema tables/city] 2024-08-29T13:53:55Z dbo <dbo@dvdrental.com> # Create rental.city_512_om partition of rental.city
+# tables/partitions/city/city_516_na [appschema tables/city] 2024-08-29T13:53:56Z dbo <dbo@dvdrental.com> # Create rental.city_516_na partition of rental.city
+# tables/partitions/city/city_520_nr [appschema tables/city] 2024-08-29T13:53:56Z dbo <dbo@dvdrental.com> # Create rental.city_520_nr partition of rental.city
+# tables/partitions/city/city_524_np [appschema tables/city] 2024-08-29T13:53:56Z dbo <dbo@dvdrental.com> # Create rental.city_524_np partition of rental.city
+# tables/partitions/city/city_528_nl [appschema tables/city] 2024-08-29T13:53:57Z dbo <dbo@dvdrental.com> # Create rental.city_528_nl partition of rental.city
+# tables/partitions/city/city_540_nc [appschema tables/city] 2024-08-29T13:53:57Z dbo <dbo@dvdrental.com> # Create rental.city_540_nc partition of rental.city
+# tables/partitions/city/city_548_vu [appschema tables/city] 2024-08-29T13:53:57Z dbo <dbo@dvdrental.com> # Create rental.city_548_vu partition of rental.city
+# tables/partitions/city/city_554_nz [appschema tables/city] 2024-08-29T13:53:57Z dbo <dbo@dvdrental.com> # Create rental.city_554_nz partition of rental.city
+# tables/partitions/city/city_562_ne [appschema tables/city] 2024-08-29T13:53:58Z dbo <dbo@dvdrental.com> # Create rental.city_562_ne partition of rental.city
+# tables/partitions/city/city_566_ng [appschema tables/city] 2024-08-29T13:53:58Z dbo <dbo@dvdrental.com> # Create rental.city_566_ng partition of rental.city
+# tables/partitions/city/city_570_nu [appschema tables/city] 2024-08-29T13:53:58Z dbo <dbo@dvdrental.com> # Create rental.city_570_nu partition of rental.city
+# tables/partitions/city/city_574_nf [appschema tables/city] 2024-08-29T13:53:58Z dbo <dbo@dvdrental.com> # Create rental.city_574_nf partition of rental.city
+# tables/partitions/city/city_578_no [appschema tables/city] 2024-08-29T13:53:59Z dbo <dbo@dvdrental.com> # Create rental.city_578_no partition of rental.city
+# tables/partitions/city/city_580_mp [appschema tables/city] 2024-08-29T13:53:59Z dbo <dbo@dvdrental.com> # Create rental.city_580_mp partition of rental.city
+# tables/partitions/city/city_581_um [appschema tables/city] 2024-08-29T13:53:59Z dbo <dbo@dvdrental.com> # Create rental.city_581_um partition of rental.city
+# tables/partitions/city/city_583_fm [appschema tables/city] 2024-08-29T13:53:59Z dbo <dbo@dvdrental.com> # Create rental.city_583_fm partition of rental.city
+# tables/partitions/city/city_584_mh [appschema tables/city] 2024-08-29T13:54:00Z dbo <dbo@dvdrental.com> # Create rental.city_584_mh partition of rental.city
+# tables/partitions/city/city_585_pw [appschema tables/city] 2024-08-29T13:54:00Z dbo <dbo@dvdrental.com> # Create rental.city_585_pw partition of rental.city
+# tables/partitions/city/city_586_pk [appschema tables/city] 2024-08-29T13:54:00Z dbo <dbo@dvdrental.com> # Create rental.city_586_pk partition of rental.city
+# tables/partitions/city/city_598_pg [appschema tables/city] 2024-08-29T13:54:00Z dbo <dbo@dvdrental.com> # Create rental.city_598_pg partition of rental.city
+# tables/partitions/city/city_608_ph [appschema tables/city] 2024-08-29T13:54:01Z dbo <dbo@dvdrental.com> # Create rental.city_608_ph partition of rental.city
+# tables/partitions/city/city_612_pn [appschema tables/city] 2024-08-29T13:54:01Z dbo <dbo@dvdrental.com> # Create rental.city_612_pn partition of rental.city
+# tables/partitions/city/city_616_pl [appschema tables/city] 2024-08-29T13:54:01Z dbo <dbo@dvdrental.com> # Create rental.city_616_pl partition of rental.city
+# tables/partitions/city/city_620_pt [appschema tables/city] 2024-08-29T13:54:01Z dbo <dbo@dvdrental.com> # Create rental.city_620_pt partition of rental.city
+# tables/partitions/city/city_624_gw [appschema tables/city] 2024-08-29T13:54:02Z dbo <dbo@dvdrental.com> # Create rental.city_624_gw partition of rental.city
+# tables/partitions/city/city_626_tl [appschema tables/city] 2024-08-29T13:54:02Z dbo <dbo@dvdrental.com> # Create rental.city_626_tl partition of rental.city
+# tables/partitions/city/city_634_qa [appschema tables/city] 2024-08-29T13:54:02Z dbo <dbo@dvdrental.com> # Create rental.city_634_qa partition of rental.city
+# tables/partitions/city/city_638_re [appschema tables/city] 2024-08-29T13:54:02Z dbo <dbo@dvdrental.com> # Create rental.city_638_re partition of rental.city
+# tables/partitions/city/city_642_ro [appschema tables/city] 2024-08-29T13:54:03Z dbo <dbo@dvdrental.com> # Create rental.city_642_ro partition of rental.city
+# tables/partitions/city/city_643_ru [appschema tables/city] 2024-08-29T13:54:03Z dbo <dbo@dvdrental.com> # Create rental.city_643_ru partition of rental.city
+# tables/partitions/city/city_646_rw [appschema tables/city] 2024-08-29T13:54:03Z dbo <dbo@dvdrental.com> # Create rental.city_646_rw partition of rental.city
+# tables/partitions/city/city_654_sh [appschema tables/city] 2024-08-29T13:54:03Z dbo <dbo@dvdrental.com> # Create rental.city_654_sh partition of rental.city
+# tables/partitions/city/city_666_pm [appschema tables/city] 2024-08-29T13:54:04Z dbo <dbo@dvdrental.com> # Create rental.city_666_pm partition of rental.city
+# tables/partitions/city/city_674_sm [appschema tables/city] 2024-08-29T13:54:04Z dbo <dbo@dvdrental.com> # Create rental.city_674_sm partition of rental.city
+# tables/partitions/city/city_678_st [appschema tables/city] 2024-08-29T13:54:04Z dbo <dbo@dvdrental.com> # Create rental.city_678_st partition of rental.city
+# tables/partitions/city/city_682_sa [appschema tables/city] 2024-08-29T13:54:04Z dbo <dbo@dvdrental.com> # Create rental.city_682_sa partition of rental.city
+# tables/partitions/city/city_686_sn [appschema tables/city] 2024-08-29T13:54:05Z dbo <dbo@dvdrental.com> # Create rental.city_686_sn partition of rental.city
+# tables/partitions/city/city_688_rs [appschema tables/city] 2024-08-29T13:54:05Z dbo <dbo@dvdrental.com> # Create rental.city_688_rs partition of rental.city
+# tables/partitions/city/city_690_sc [appschema tables/city] 2024-08-29T13:54:05Z dbo <dbo@dvdrental.com> # Create rental.city_690_sc partition of rental.city
+# tables/partitions/city/city_694_sl [appschema tables/city] 2024-08-29T13:54:06Z dbo <dbo@dvdrental.com> # Create rental.city_694_sl partition of rental.city
+# tables/partitions/city/city_702_sg [appschema tables/city] 2024-08-29T13:54:06Z dbo <dbo@dvdrental.com> # Create rental.city_702_sg partition of rental.city
+# tables/partitions/city/city_703_sk [appschema tables/city] 2024-08-29T13:54:06Z dbo <dbo@dvdrental.com> # Create rental.city_703_sk partition of rental.city
+# tables/partitions/city/city_704_vn [appschema tables/city] 2024-08-29T13:54:06Z dbo <dbo@dvdrental.com> # Create rental.city_704_vn partition of rental.city
+# tables/partitions/city/city_705_si [appschema tables/city] 2024-08-29T13:54:07Z dbo <dbo@dvdrental.com> # Create rental.city_705_si partition of rental.city
+# tables/partitions/city/city_706_so [appschema tables/city] 2024-08-29T13:54:07Z dbo <dbo@dvdrental.com> # Create rental.city_706_so partition of rental.city
+# tables/partitions/city/city_710_za [appschema tables/city] 2024-08-29T13:54:07Z dbo <dbo@dvdrental.com> # Create rental.city_710_za partition of rental.city
+# tables/partitions/city/city_716_zw [appschema tables/city] 2024-08-29T13:54:07Z dbo <dbo@dvdrental.com> # Create rental.city_716_zw partition of rental.city
+# tables/partitions/city/city_724_es [appschema tables/city] 2024-08-29T13:54:08Z dbo <dbo@dvdrental.com> # Create rental.city_724_es partition of rental.city
+# tables/partitions/city/city_728_ss [appschema tables/city] 2024-08-29T13:54:08Z dbo <dbo@dvdrental.com> # Create rental.city_728_ss partition of rental.city
+# tables/partitions/city/city_729_sd [appschema tables/city] 2024-08-29T13:54:08Z dbo <dbo@dvdrental.com> # Create rental.city_729_sd partition of rental.city
+# tables/partitions/city/city_732_eh [appschema tables/city] 2024-08-29T13:54:08Z dbo <dbo@dvdrental.com> # Create rental.city_732_eh partition of rental.city
+# tables/partitions/city/city_744_sj [appschema tables/city] 2024-08-29T13:54:09Z dbo <dbo@dvdrental.com> # Create rental.city_744_sj partition of rental.city
+# tables/partitions/city/city_748_sz [appschema tables/city] 2024-08-29T13:54:09Z dbo <dbo@dvdrental.com> # Create rental.city_748_sz partition of rental.city
+# tables/partitions/city/city_752_se [appschema tables/city] 2024-08-29T13:54:09Z dbo <dbo@dvdrental.com> # Create rental.city_752_se partition of rental.city
+# tables/partitions/city/city_756_ch [appschema tables/city] 2024-08-29T13:54:09Z dbo <dbo@dvdrental.com> # Create rental.city_756_ch partition of rental.city
+# tables/partitions/city/city_760_sy [appschema tables/city] 2024-08-29T13:54:10Z dbo <dbo@dvdrental.com> # Create rental.city_760_sy partition of rental.city
+# tables/partitions/city/city_762_tj [appschema tables/city] 2024-08-29T13:54:10Z dbo <dbo@dvdrental.com> # Create rental.city_762_tj partition of rental.city
+# tables/partitions/city/city_764_th [appschema tables/city] 2024-08-29T13:54:10Z dbo <dbo@dvdrental.com> # Create rental.city_764_th partition of rental.city
+# tables/partitions/city/city_768_tg [appschema tables/city] 2024-08-29T13:54:11Z dbo <dbo@dvdrental.com> # Create rental.city_768_tg partition of rental.city
+# tables/partitions/city/city_772_tk [appschema tables/city] 2024-08-29T13:54:11Z dbo <dbo@dvdrental.com> # Create rental.city_772_tk partition of rental.city
+# tables/partitions/city/city_776_to [appschema tables/city] 2024-08-29T13:54:11Z dbo <dbo@dvdrental.com> # Create rental.city_776_to partition of rental.city
+# tables/partitions/city/city_784_ae [appschema tables/city] 2024-08-29T13:54:11Z dbo <dbo@dvdrental.com> # Create rental.city_784_ae partition of rental.city
+# tables/partitions/city/city_788_tn [appschema tables/city] 2024-08-29T13:54:12Z dbo <dbo@dvdrental.com> # Create rental.city_788_tn partition of rental.city
+# tables/partitions/city/city_792_tr [appschema tables/city] 2024-08-29T13:54:12Z dbo <dbo@dvdrental.com> # Create rental.city_792_tr partition of rental.city
+# tables/partitions/city/city_795_tm [appschema tables/city] 2024-08-29T13:54:12Z dbo <dbo@dvdrental.com> # Create rental.city_795_tm partition of rental.city
+# tables/partitions/city/city_798_tv [appschema tables/city] 2024-08-29T13:54:12Z dbo <dbo@dvdrental.com> # Create rental.city_798_tv partition of rental.city
+# tables/partitions/city/city_800_ug [appschema tables/city] 2024-08-29T13:54:13Z dbo <dbo@dvdrental.com> # Create rental.city_800_ug partition of rental.city
+# tables/partitions/city/city_804_ua [appschema tables/city] 2024-08-29T13:54:13Z dbo <dbo@dvdrental.com> # Create rental.city_804_ua partition of rental.city
+# tables/partitions/city/city_807_mk [appschema tables/city] 2024-08-29T13:54:13Z dbo <dbo@dvdrental.com> # Create rental.city_807_mk partition of rental.city
+# tables/partitions/city/city_818_eg [appschema tables/city] 2024-08-29T13:54:13Z dbo <dbo@dvdrental.com> # Create rental.city_818_eg partition of rental.city
+# tables/partitions/city/city_826_gb [appschema tables/city] 2024-08-29T13:54:14Z dbo <dbo@dvdrental.com> # Create rental.city_826_gb partition of rental.city
+# tables/partitions/city/city_831_gg [appschema tables/city] 2024-08-29T13:54:14Z dbo <dbo@dvdrental.com> # Create rental.city_831_gg partition of rental.city
+# tables/partitions/city/city_832_je [appschema tables/city] 2024-08-29T13:54:14Z dbo <dbo@dvdrental.com> # Create rental.city_832_je partition of rental.city
+# tables/partitions/city/city_833_im [appschema tables/city] 2024-08-29T13:54:15Z dbo <dbo@dvdrental.com> # Create rental.city_833_im partition of rental.city
+# tables/partitions/city/city_834_tz [appschema tables/city] 2024-08-29T13:54:15Z dbo <dbo@dvdrental.com> # Create rental.city_834_tz partition of rental.city
+# tables/partitions/city/city_840_us [appschema tables/city] 2024-08-29T13:54:15Z dbo <dbo@dvdrental.com> # Create rental.city_840_us partition of rental.city
+# tables/partitions/city/city_854_bf [appschema tables/city] 2024-08-29T13:54:15Z dbo <dbo@dvdrental.com> # Create rental.city_854_bf partition of rental.city
+# tables/partitions/city/city_860_uz [appschema tables/city] 2024-08-29T13:54:16Z dbo <dbo@dvdrental.com> # Create rental.city_860_uz partition of rental.city
+# tables/partitions/city/city_876_wf [appschema tables/city] 2024-08-29T13:54:16Z dbo <dbo@dvdrental.com> # Create rental.city_876_wf partition of rental.city
+# tables/partitions/city/city_882_ws [appschema tables/city] 2024-08-29T13:54:16Z dbo <dbo@dvdrental.com> # Create rental.city_882_ws partition of rental.city
+# tables/partitions/city/city_887_ye [appschema tables/city] 2024-08-29T13:54:16Z dbo <dbo@dvdrental.com> # Create rental.city_887_ye partition of rental.city
+# tables/partitions/city/city_894_zm [appschema tables/city] 2024-08-29T13:54:17Z dbo <dbo@dvdrental.com> # Create rental.city_894_zm partition of rental.city
+# data/city-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-20T13:22:00Z dbo <dbo@dvdrental.com> # Initial dsa.json_import static data load.
+# functions/city-etl-from-json_imports [dsaschema tables/json_imports appschema tables/country tables/city] 2024-08-25T13:36:32Z dbo <dbo@dvdrental.com> # ETL: rental.city from dsa.json_imports.
+# data/city-execute-etl-from-json_imports [dsaschema tables/json_imports functions/city-etl-from-json_imports appschema tables/country tables/city] 2024-08-29T12:21:30Z dbo <dbo@dvdrental.com> # ETL: execute city_etl_from_json_imports().
+
+# data/address-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-20T13:22:51Z dbo <dbo@dvdrental.com> # Initial dsa.json_import static data load.
+# tables/address [appschema tables/audit_columns tables/country tables/city] 2024-08-14T09:50:01Z dbo <dbo@dvdrental.com> # Add an address table.
+# triggers/address_audit_columns_trg [appschema functions/audit_columns_trg_func tables/address] 2024-08-28T14:27:54Z dbo <dbo@dvdrental.com> # Add audit column trigger.
+
+# functions/address-etl-from-json_imports [dsaschema tables/json_imports appschema tables/country tables/city tables/address] 2024-08-25T13:37:23Z dbo <dbo@dvdrental.com> # ETL: rental.address from dsa.json_imports.
+
+# data/language-data-load-into-json_imports [dsaschema tables/json_imports] 2024-08-20T12:43:47Z dbo <dbo@dvdrental.com> # Initial dsa.json_import static data load.
+# tables/language [appschema tables/audit_columns] 2024-08-19T13:46:00Z dbo <dbo@dvdrental.com> # Create language table.
+# triggers/language_audit_columns_trg [appschema functions/audit_columns_trg_func tables/language] 2024-08-28T14:28:41Z dbo <dbo@dvdrental.com> # Add audit column trigger.
+# functions/language-etl-from-json_imports [dsaschema tables/json_imports appschema tables/language] 2024-08-25T13:38:13Z dbo <dbo@dvdrental.com> # ETL: rental.language from dsa.json_imports.
+
+
