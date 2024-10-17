@@ -97,7 +97,7 @@ services:
     user: sqitch
     volumes:
       - ./sqitch/.sqitch/sqitch.conf:/home/.sqitch/sqitch.conf
-      - ./sqitch/.sqitch/templates:/home/.sqitch/templates
+      - ~/workspace/sqitch-templates/templates:/home/.sqitch/templates
       - ./.pgpass:/home/.pgpass:ro
       - ./sqitch/sqitch.sh:/home/sqitch.sh
       - ./sqitch/migrations/:/mnt/migrations/
