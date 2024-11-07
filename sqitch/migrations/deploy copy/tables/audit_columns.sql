@@ -4,10 +4,10 @@
 BEGIN;
 
 CREATE TABLE rental.audit_columns (
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp(),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT clock_timestamp(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
     deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-    created_by TEXT DEFAULT current_user,
+    created_by TEXT NOT NULL DEFAULT current_user,
     updated_by TEXT DEFAULT NULL,
     deleted_by TEXT DEFAULT NULL
 );

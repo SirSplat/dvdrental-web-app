@@ -1,33 +1,33 @@
 services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "${FRONTEND_PORT}:5000"
-    links:
-      - backend
-    volumes:
-      - ./frontend:/app
-    environment:
-      FLASK_APP: ${FLASK_APP}
-      FLASK_ENV: ${FLASK_ENV}
-      FLASK_DEBUG: ${FLASK_DEBUG}
-      DATABASE_URL: ${PGSQL_DB_URI}
-      FLASK_SECRET_KEY: ${JWT_SECRET}
-    command: flask run --host=${FRONTEND_HOST} --reload --extra-files=/templates
-    depends_on:
-      - backend
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "${FRONTEND_PORT}:5000"
+  #   links:
+  #     - backend
+  #   volumes:
+  #     - ./frontend:/app
+  #   environment:
+  #     FLASK_APP: ${FLASK_APP}
+  #     FLASK_ENV: ${FLASK_ENV}
+  #     FLASK_DEBUG: ${FLASK_DEBUG}
+  #     DATABASE_URL: ${PGSQL_DB_URI}
+  #     FLASK_SECRET_KEY: ${JWT_SECRET}
+  #   command: flask run --host=${FRONTEND_HOST} --reload --extra-files=/templates
+  #   depends_on:
+  #     - backend
 
-  backend:
-    build: ./backend
-    ports:
-      - "${BACKEND_PORT}:8000"
-    links:
-      - pgbouncer
-    environment:
-      JWT_SECRET: ${JWT_SECRET}
-    command: uvicorn app:app --host ${BACKEND_HOST} --port ${BACKEND_PORT}
-    depends_on:
-      - pgbouncer
+  # backend:
+  #   build: ./backend
+  #   ports:
+  #     - "${BACKEND_PORT}:8000"
+  #   links:
+  #     - pgbouncer
+  #   environment:
+  #     JWT_SECRET: ${JWT_SECRET}
+  #   command: uvicorn app:app --host ${BACKEND_HOST} --port ${BACKEND_PORT}
+  #   depends_on:
+  #     - pgbouncer
 
   db:
     image: sirsplat/dvdrental:latest
@@ -49,39 +49,39 @@ services:
       timeout: 5s
       retries: 5
 
-  pgbouncer:
-    image: edoburu/pgbouncer
-    container_name: pgbouncer
-    links:
-      - db
-    environment:
-      - PGBCR_DB_NAME=${DB_NAME}
-      - PGBCR_DB_USER=${POSTGREST_DB_USER}
-      - PGBCR_DB_PASSWORD=${POSTGREST_DB_PASSWORD}
-    volumes:
-      - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
-      - ./pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt
-    ports:
-      - "${PGBOUNCER_PORT}:6432"
-    depends_on:
-      - db
+  # pgbouncer:
+  #   image: edoburu/pgbouncer
+  #   container_name: pgbouncer
+  #   links:
+  #     - db
+  #   environment:
+  #     - PGBCR_DB_NAME=${DB_NAME}
+  #     - PGBCR_DB_USER=${POSTGREST_DB_USER}
+  #     - PGBCR_DB_PASSWORD=${POSTGREST_DB_PASSWORD}
+  #   volumes:
+  #     - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
+  #     - ./pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt
+  #   ports:
+  #     - "${PGBOUNCER_PORT}:6432"
+  #   depends_on:
+  #     - db
 
-  postgrest:
-    image: postgrest/postgrest
-    environment:
-      PGRST_DB_URI: ${PGBOUNCER_DB_URI}
-      PGRST_DB_SCHEMA: ${POSTGREST_DB_SCHEMA}
-      PGRST_DB_ANON_ROLE: ${POSTGREST_DB_ANON_ROLE}
-      PGRST_JWT_SECRET: ${JWT_SECRET}
-      PGRST_DB_POOL: ${POSTGREST_DB_POOL}
-      PGRST_DB_PREPARED_STATEMENTS: ${POSTGREST_DB_PREPARED_STATEMENTS}
-    ports:
-      - "${POSTGREST_PORT}:3000"
-    links:
-      - db:db
-    depends_on:
-      - pgbouncer
-      - db
+  # postgrest:
+  #   image: postgrest/postgrest
+  #   environment:
+  #     PGRST_DB_URI: ${PGBOUNCER_DB_URI}
+  #     PGRST_DB_SCHEMA: ${POSTGREST_DB_SCHEMA}
+  #     PGRST_DB_ANON_ROLE: ${POSTGREST_DB_ANON_ROLE}
+  #     PGRST_JWT_SECRET: ${JWT_SECRET}
+  #     PGRST_DB_POOL: ${POSTGREST_DB_POOL}
+  #     PGRST_DB_PREPARED_STATEMENTS: ${POSTGREST_DB_PREPARED_STATEMENTS}
+  #   ports:
+  #     - "${POSTGREST_PORT}:3000"
+  #   links:
+  #     - db:db
+  #   depends_on:
+  #     - pgbouncer
+  #     - db
 
   sqitch:
     # image: sqitch/sqitch:latest

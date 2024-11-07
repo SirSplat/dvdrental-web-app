@@ -2,6 +2,4 @@
 %project=dvdrental
 %uri=https://github.com/SirSplat/dvdrental.git
 
-
-dsa-schema/dsa 2024-09-24T15:43:37Z dbo <dbo@dvdrental.com> # Add dsa schema. Home of all things ETL.
-rental-schema/rental 2024-10-03T09:42:14Z dbo <dbo@dvdrental.com> # Add rental schema. Home of all things rental.
+create_appschema 2024-11-07T13:23:27Z dbo <dbo@dvdrental.com> # Add application schema.

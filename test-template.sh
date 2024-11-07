@@ -1,20 +1,4 @@
-# DSA Schema
-docker compose exec sqitch sqitch add dsa-schema/dsa db --template create-schema \
--s schemaname=dsa \
--s schemacomment='Home of all things ETL.' \
--m 'Add dsa schema. Home of all things ETL.'
-
-docker compose exec sqitch sqitch add dsa-schema/tables/json_imports db --template create-table \
--s schemaname=dsa \
--s schemacomment='Home of all things ETL.' \
--s tablename=json_imports \
--s tablecomment='Table to store JSON for use by ETL functions.' \
--s columnname=payload \
--s columntype=json \
--s columncomment='Data in json format to be consumed by ETL functions.' \
--m 'Add dsa.json_imports containing a single json column. Used by ETL functions.'
-
-# App Schema
+# Schema
 docker compose exec sqitch sqitch add rental-schema/rental db --template create-schema \
 -s schemaname=rental \
 -s schemacomment='Home of all things rental.' \
