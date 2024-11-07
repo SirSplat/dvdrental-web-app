@@ -4,3 +4,4 @@
 
 
 dvdrental_create_schema 2024-11-07T13:29:09Z dbo <dbo@dvdrental.com> # Add dvdrental application schema.
+dsa_create_schema 2024-11-07T13:44:52Z dbo <dbo@dvdrental.com> # Add DSA (ETL) schema.

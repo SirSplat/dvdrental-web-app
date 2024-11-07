@@ -15,3 +15,5 @@ build/
 # All data staging files
 scratchpad
 
+# pgtapme generated tests, for now!
+# pg_prove/pgtapme_generated_files
