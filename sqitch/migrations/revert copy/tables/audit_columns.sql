@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TABLE rental.audit_columns;
+DROP TABLE dvdrental.audit_columns;
 
 COMMIT;

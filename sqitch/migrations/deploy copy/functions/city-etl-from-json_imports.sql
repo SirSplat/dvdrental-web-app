@@ -19,13 +19,13 @@ BEGIN
             ( val->>'city_name' )::TEXT AS city_name
         FROM
             dsa.json_imports
-            JOIN rental.country ON (
+            JOIN dvdrental.country ON (
                 country.country_name = ( val->>'country_name' )::TEXT AND
                 country.iso2 = ( val->>'iso2' )::TEXT AND
                 country.iso3 = ( val->>'iso3' )::TEXT
             )
     LOOP
-        INSERT INTO rental.city (
+        INSERT INTO dvdrental.city (
             country_fk,
             city_name
         ) VALUES (

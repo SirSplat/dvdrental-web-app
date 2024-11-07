@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TRIGGER city_audit_columns_trg ON rental.city;
+DROP TRIGGER city_audit_columns_trg ON dvdrental.city;
 
 COMMIT;

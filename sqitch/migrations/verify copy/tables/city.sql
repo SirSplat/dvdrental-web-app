@@ -10,7 +10,7 @@ SELECT
 FROM
     information_schema.tables
 WHERE
-    tables.table_schema = 'rental' AND
+    tables.table_schema = 'dvdrental' AND
     tables.table_name = 'city';
 
 /* Test table has a comment */
@@ -20,7 +20,7 @@ FROM
     pg_catalog.pg_class
     JOIN pg_catalog.pg_namespace ON (
         pg_namespace.oid = pg_class.relnamespace AND
-        pg_namespace.nspname = 'rental'
+        pg_namespace.nspname = 'dvdrental'
     )
 WHERE
     pg_class.relname = 'city';
@@ -33,7 +33,7 @@ FROM
     pg_catalog.pg_class
     JOIN pg_catalog.pg_namespace ON (
         pg_namespace.oid = pg_class.relnamespace AND
-        pg_namespace.nspname = 'rental'
+        pg_namespace.nspname = 'dvdrental'
     )
     JOIN pg_catalog.pg_attribute ON (
         pg_attribute.attrelid = pg_class.oid AND
@@ -49,7 +49,7 @@ FROM
     pg_catalog.pg_class
     JOIN pg_catalog.pg_namespace ON (
         pg_namespace.oid = pg_class.relnamespace AND
-        pg_namespace.nspname = 'rental'
+        pg_namespace.nspname = 'dvdrental'
     )
     JOIN pg_catalog.pg_attribute ON (
         pg_attribute.attrelid = pg_class.oid AND
@@ -65,7 +65,7 @@ FROM
     pg_catalog.pg_class
     JOIN pg_catalog.pg_namespace ON (
         pg_namespace.oid = pg_class.relnamespace AND
-        pg_namespace.nspname = 'rental'
+        pg_namespace.nspname = 'dvdrental'
     )
     JOIN pg_catalog.pg_attribute ON (
         pg_attribute.attrelid = pg_class.oid AND
@@ -84,7 +84,7 @@ FROM
     pg_catalog.pg_class
     JOIN pg_catalog.pg_namespace ON (
         pg_namespace.oid = pg_class.relnamespace AND
-        pg_namespace.nspname = 'rental'
+        pg_namespace.nspname = 'dvdrental'
     )
     JOIN pg_catalog.pg_constraint ON (
         pg_constraint.conrelid = pg_class.oid AND
@@ -100,7 +100,7 @@ FROM
     pg_catalog.pg_class
     JOIN pg_catalog.pg_namespace ON (
         pg_namespace.oid = pg_class.relnamespace AND
-        pg_namespace.nspname = 'rental'
+        pg_namespace.nspname = 'dvdrental'
     )
     JOIN pg_catalog.pg_constraint ON (
         pg_constraint.conrelid = pg_class.oid AND
@@ -116,7 +116,7 @@ FROM
     pg_catalog.pg_class
     JOIN pg_catalog.pg_namespace ON (
         pg_namespace.oid = pg_class.relnamespace AND
-        pg_namespace.nspname = 'rental'
+        pg_namespace.nspname = 'dvdrental'
     )
     JOIN pg_catalog.pg_constraint ON (
         pg_constraint.conrelid = pg_class.oid AND

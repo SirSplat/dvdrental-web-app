@@ -7,7 +7,7 @@ BEGIN;
 
 ALTER DEFAULT PRIVILEGES
     FOR ROLE dbo
-    IN SCHEMA rental
+    IN SCHEMA dvdrental
     GRANT SELECT
     ON TABLES
     TO pgrst_authenticator;

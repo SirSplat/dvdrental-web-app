@@ -2,6 +2,6 @@
 
 BEGIN;
 
-SELECT pg_catalog.has_function_privilege( current_user, 'rental.audit_columns_trg_func()', 'execute' );
+SELECT pg_catalog.has_function_privilege( current_user, 'dvdrental.audit_columns_trg_func()', 'execute' );
 
 ROLLBACK;

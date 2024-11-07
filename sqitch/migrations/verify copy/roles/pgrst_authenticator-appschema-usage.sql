@@ -2,6 +2,6 @@
 
 BEGIN;
 
-SELECT pg_catalog.has_schema_privilege( 'pgrst_authenticator', 'rental', 'USAGE' );
+SELECT pg_catalog.has_schema_privilege( 'pgrst_authenticator', 'dvdrental', 'USAGE' );
 
 ROLLBACK;

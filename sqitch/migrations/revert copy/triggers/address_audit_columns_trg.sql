@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TRIGGER address_audit_columns_trg ON rental.address;
+DROP TRIGGER address_audit_columns_trg ON dvdrental.address;
 
 COMMIT;

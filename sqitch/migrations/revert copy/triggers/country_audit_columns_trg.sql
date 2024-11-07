@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TRIGGER country_audit_columns_trg ON rental.country;
+DROP TRIGGER country_audit_columns_trg ON dvdrental.country;
 
 COMMIT;

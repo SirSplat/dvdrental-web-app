@@ -4,6 +4,6 @@
 
 BEGIN;
 
-GRANT USAGE ON SCHEMA rental TO data_loader;
+GRANT USAGE ON SCHEMA dvdrental TO data_loader;
 
 COMMIT;

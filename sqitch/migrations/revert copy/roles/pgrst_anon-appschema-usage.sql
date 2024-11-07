@@ -2,6 +2,6 @@
 
 BEGIN;
 
-REVOKE USAGE ON SCHEMA rental FROM pgrst_anon;
+REVOKE USAGE ON SCHEMA dvdrental FROM pgrst_anon;
 
 COMMIT;

@@ -4,6 +4,6 @@
 
 BEGIN;
 
-GRANT USAGE ON SCHEMA rental TO pgrst_anon;
+GRANT USAGE ON SCHEMA dvdrental TO pgrst_anon;
 
 COMMIT;

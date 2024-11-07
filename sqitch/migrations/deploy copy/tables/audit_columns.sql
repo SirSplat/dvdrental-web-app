@@ -3,7 +3,7 @@
 
 BEGIN;
 
-CREATE TABLE rental.audit_columns (
+CREATE TABLE dvdrental.audit_columns (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT clock_timestamp(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
     deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
@@ -12,12 +12,12 @@ CREATE TABLE rental.audit_columns (
     deleted_by TEXT DEFAULT NULL
 );
 
-COMMENT ON TABLE rental.audit_columns IS 'Business standardised audit columns, MUST be included in every table!';
-COMMENT ON COLUMN rental.audit_columns.created_at IS 'When the record was created';
-COMMENT ON COLUMN rental.audit_columns.updated_at IS 'When the record was last updated';
-COMMENT ON COLUMN rental.audit_columns.deleted_at IS 'When the record was deleted';
-COMMENT ON COLUMN rental.audit_columns.created_by IS 'Who created the record';
-COMMENT ON COLUMN rental.audit_columns.updated_by IS 'Who last updated the record';
-COMMENT ON COLUMN rental.audit_columns.deleted_by IS 'Who deleted the record';
+COMMENT ON TABLE dvdrental.audit_columns IS 'Business standardised audit columns, MUST be included in every table!';
+COMMENT ON COLUMN dvdrental.audit_columns.created_at IS 'When the record was created';
+COMMENT ON COLUMN dvdrental.audit_columns.updated_at IS 'When the record was last updated';
+COMMENT ON COLUMN dvdrental.audit_columns.deleted_at IS 'When the record was deleted';
+COMMENT ON COLUMN dvdrental.audit_columns.created_by IS 'Who created the record';
+COMMENT ON COLUMN dvdrental.audit_columns.updated_by IS 'Who last updated the record';
+COMMENT ON COLUMN dvdrental.audit_columns.deleted_by IS 'Who deleted the record';
 
 COMMIT;

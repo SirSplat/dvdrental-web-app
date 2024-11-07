@@ -2,7 +2,7 @@
 
 BEGIN;
 
-CREATE SCHEMA rental;
-COMMENT ON SCHEMA rental IS 'Home of all things DVD Rental.';
+CREATE SCHEMA dvdrental;
+COMMENT ON SCHEMA dvdrental IS 'Home of all things DVD Rental.';
 
 COMMIT;

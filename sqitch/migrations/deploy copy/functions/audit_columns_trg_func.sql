@@ -4,7 +4,7 @@
 
 BEGIN;
 
-CREATE OR REPLACE FUNCTION rental.audit_columns_trg_func()
+CREATE OR REPLACE FUNCTION dvdrental.audit_columns_trg_func()
 RETURNS TRIGGER AS $$
 DECLARE
 BEGIN

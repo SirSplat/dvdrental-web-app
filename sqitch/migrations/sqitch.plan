@@ -2,4 +2,5 @@
 %project=dvdrental
 %uri=https://github.com/SirSplat/dvdrental.git
 
-create_appschema 2024-11-07T13:23:27Z dbo <dbo@dvdrental.com> # Add application schema.
+
+dvdrental_create_schema 2024-11-07T13:29:09Z dbo <dbo@dvdrental.com> # Add dvdrental application schema.

@@ -8,7 +8,7 @@ FROM
     pg_catalog.pg_default_acl
     JOIN pg_catalog.pg_namespace ON (
         pg_namespace.oid = pg_default_acl.defaclnamespace AND
-        pg_namespace.nspname = 'rental'
+        pg_namespace.nspname = 'dvdrental'
     )
     LEFT JOIN LATERAL pg_catalog.aclexplode( pg_default_acl.defaclacl ) AS a ON (
         a.privilege_type IN ( 'SELECT', 'INSERT', 'DELETE', 'UPDATE' )

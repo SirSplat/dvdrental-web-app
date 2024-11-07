@@ -19,7 +19,7 @@ BEGIN
         COUNT( DISTINCT iso3 ),
         COUNT( DISTINCT country_name )
     FROM
-        rental.country
+        dvdrental.country
     INTO
         loaded_row_count,
         loaded_country_code_count,
@@ -27,11 +27,11 @@ BEGIN
         loaded_iso3_count,
         loaded_country_name_count;
 
-    ASSERT loaded_row_count = expected_row_count, 'Incorrect number of rows in rental.country.';
-    ASSERT loaded_country_code_count = expected_row_count, 'Incorrect number of country codes in rental.country.';
-    ASSERT loaded_iso2_count = expected_row_count, 'Incorrect number of iso2 codes in rental.country.';
-    ASSERT loaded_iso3_count = expected_row_count, 'Incorrect number of iso3 codes in rental.country.';
-    ASSERT loaded_country_name_count = expected_row_count, 'Incorrect number of country names in rental.country.';
+    ASSERT loaded_row_count = expected_row_count, 'Incorrect number of rows in dvdrental.country.';
+    ASSERT loaded_country_code_count = expected_row_count, 'Incorrect number of country codes in dvdrental.country.';
+    ASSERT loaded_iso2_count = expected_row_count, 'Incorrect number of iso2 codes in dvdrental.country.';
+    ASSERT loaded_iso3_count = expected_row_count, 'Incorrect number of iso3 codes in dvdrental.country.';
+    ASSERT loaded_country_name_count = expected_row_count, 'Incorrect number of country names in dvdrental.country.';
 END;
 $$;
 

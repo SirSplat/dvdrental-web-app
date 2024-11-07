@@ -2,6 +2,6 @@
 
 BEGIN;
 
-TRUNCATE TABLE rental.country;
+TRUNCATE TABLE dvdrental.country;
 
 COMMIT;

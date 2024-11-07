@@ -2,6 +2,6 @@
 
 BEGIN;
 
-SELECT pg_catalog.has_schema_privilege( 'data_loader', 'rental', 'USAGE' );
+SELECT pg_catalog.has_schema_privilege( 'data_loader', 'dvdrental', 'USAGE' );
 
 ROLLBACK;

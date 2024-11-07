@@ -6,7 +6,7 @@ BEGIN;
 
 ALTER DEFAULT PRIVILEGES
     FOR ROLE dbo
-    IN SCHEMA rental
+    IN SCHEMA dvdrental
     GRANT
         SELECT,
         INSERT,

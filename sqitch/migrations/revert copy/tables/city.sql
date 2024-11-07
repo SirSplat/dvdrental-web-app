@@ -4,6 +4,6 @@
 
 BEGIN;
 
-DROP TABLE rental.city;
+DROP TABLE dvdrental.city;
 
 COMMIT;

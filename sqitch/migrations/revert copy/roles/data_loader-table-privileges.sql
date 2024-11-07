@@ -2,6 +2,6 @@
 
 BEGIN;
 
-REVOKE ALL ON ALL TABLES IN SCHEMA rental FROM data_loader;
+REVOKE ALL ON ALL TABLES IN SCHEMA dvdrental FROM data_loader;
 
 COMMIT;

@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP SCHEMA rental;
+DROP SCHEMA dvdrental;
 
 COMMIT;

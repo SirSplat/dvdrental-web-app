@@ -7,7 +7,7 @@ SELECT
 FROM
     information_schema.tables
 WHERE
-    tables.table_schema = 'rental' AND
+    tables.table_schema = 'dvdrental' AND
     tables.table_name = 'language';
 
 SELECT
@@ -16,7 +16,7 @@ FROM
     pg_catalog.pg_class
     JOIN pg_catalog.pg_namespace ON (
         pg_namespace.oid = pg_class.relnamespace AND
-        pg_namespace.nspname = 'rental'
+        pg_namespace.nspname = 'dvdrental'
     )
 WHERE
     pg_class.relname = 'language';

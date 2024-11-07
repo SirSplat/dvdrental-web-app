@@ -14,13 +14,13 @@ BEGIN
         COUNT( * ) AS load_count,
         COUNT( DISTINCT country_fk ) AS country_count
     FROM
-        rental.city
+        dvdrental.city
     INTO
         loaded_load_count,
         loaded_country_count;
 
-    ASSERT loaded_load_count = expected_load_count, 'Incorrect number of rows in rental.city.';
-    ASSERT loaded_country_count = expected_country_count, 'Incorrect number of distinct country codes in rental.city.';
+    ASSERT loaded_load_count = expected_load_count, 'Incorrect number of rows in dvdrental.city.';
+    ASSERT loaded_country_count = expected_country_count, 'Incorrect number of distinct country codes in dvdrental.city.';
 END;
 $$;
 

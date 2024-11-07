@@ -2,6 +2,6 @@
 
 BEGIN;
 
-REVOKE ALL ON SCHEMA rental FROM webapp_user;
+REVOKE ALL ON SCHEMA dvdrental FROM webapp_user;
 
 COMMIT;

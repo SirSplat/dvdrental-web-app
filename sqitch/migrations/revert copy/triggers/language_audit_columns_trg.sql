@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TRIGGER language_audit_columns_trg ON rental.language;
+DROP TRIGGER language_audit_columns_trg ON dvdrental.language;
 
 COMMIT;

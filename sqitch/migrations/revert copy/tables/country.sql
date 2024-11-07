@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TABLE rental.country;
+DROP TABLE dvdrental.country;
 
 COMMIT;

@@ -2,6 +2,6 @@
 
 BEGIN;
 
-SELECT pg_catalog.has_schema_privilege( 'webapp_user', 'rental', 'USAGE' );
+SELECT pg_catalog.has_schema_privilege( 'webapp_user', 'dvdrental', 'USAGE' );
 
 ROLLBACK;

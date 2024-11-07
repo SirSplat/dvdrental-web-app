@@ -46,7 +46,7 @@ BEGIN
         and country at some point in the future
 */
 
-    INSERT INTO rental.country (
+    INSERT INTO dvdrental.country (
         country_code,
         iso2,
         iso3,

@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP FUNCTION rental.audit_columns_trg_func();
+DROP FUNCTION dvdrental.audit_columns_trg_func();
 
 COMMIT;

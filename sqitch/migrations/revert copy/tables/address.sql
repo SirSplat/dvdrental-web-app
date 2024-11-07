@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TABLE rental.address;
+DROP TABLE dvdrental.address;
 
 COMMIT;

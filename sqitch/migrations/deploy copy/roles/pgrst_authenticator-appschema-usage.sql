@@ -4,6 +4,6 @@
 
 BEGIN;
 
-GRANT USAGE ON SCHEMA rental TO pgrst_authenticator;
+GRANT USAGE ON SCHEMA dvdrental TO pgrst_authenticator;
 
 COMMIT;

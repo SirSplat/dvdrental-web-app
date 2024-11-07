@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TABLE rental.language;
+DROP TABLE dvdrental.language;
 
 COMMIT;

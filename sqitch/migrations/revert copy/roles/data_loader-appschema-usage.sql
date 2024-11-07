@@ -2,6 +2,6 @@
 
 BEGIN;
 
-REVOKE USAGE ON SCHEMA rental FROM data_loader;
+REVOKE USAGE ON SCHEMA dvdrental FROM data_loader;
 
 COMMIT;

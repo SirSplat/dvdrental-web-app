@@ -4,6 +4,6 @@
 
 BEGIN;
 
-GRANT USAGE ON SCHEMA rental TO webapp_user;
+GRANT USAGE ON SCHEMA dvdrental TO webapp_user;
 
 COMMIT;

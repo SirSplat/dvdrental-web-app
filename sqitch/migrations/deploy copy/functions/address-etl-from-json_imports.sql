@@ -28,7 +28,7 @@ BEGIN
     --             subregion.subregion_code = ( val->>'sub-region-code' )::SMALLINT
     --         )
     -- LOOP
-    --     INSERT INTO rental.country (
+    --     INSERT INTO dvdrental.country (
     --         subregion_fk,
     --         country_code,
     --         iso2,

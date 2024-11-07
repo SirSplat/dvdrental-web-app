@@ -12,10 +12,10 @@ GRANT
     SELECT,
     INSERT
 ON TABLE
-    rental.country,
-    rental.city,
-    rental.address,
-    rental.language
+    dvdrental.country,
+    dvdrental.city,
+    dvdrental.address,
+    dvdrental.language
 TO data_loader;
 
 COMMIT;

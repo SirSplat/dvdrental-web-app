@@ -2,6 +2,6 @@
 
 BEGIN;
 
-SELECT pg_catalog.has_schema_privilege( 'pgrst_anon', 'rental', 'USAGE' );
+SELECT pg_catalog.has_schema_privilege( 'pgrst_anon', 'dvdrental', 'USAGE' );
 
 ROLLBACK;
