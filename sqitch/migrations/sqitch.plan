@@ -1,7 +1,11 @@
 %syntax-version=1.0.0
-%project=dvdrental
-%uri=https://github.com/SirSplat/dvdrental.git
+%project=dvdrental-web-app
+%uri=https://github.com/SirSplat/dvdrental-web-app.git
 
 
-dvdrental_create_schema 2024-11-07T13:29:09Z dbo <dbo@dvdrental.com> # Add dvdrental application schema.
+appschema_create_schema 2024-11-07T13:29:09Z dbo <dbo@dvdrental.com> # Add application schema.
 dsa_create_schema 2024-11-07T13:44:52Z dbo <dbo@dvdrental.com> # Add DSA (ETL) schema.
+roles/dbadmins 2024-11-13T13:26:50Z dbo <dbo@dvdrental.com> # Add dbadmin group
+roles/sales 2024-11-13T13:36:34Z dbo <dbo@dvdrental.com> # Add application sales group.
+roles/stock 2024-11-13T13:37:19Z dbo <dbo@dvdrental.com> # Add application stock group.
+roles/manager 2024-11-13T13:43:46Z dbo <dbo@dvdrental.com> # Add application manager group.
